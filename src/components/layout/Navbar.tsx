@@ -21,7 +21,7 @@ export function Navbar() {
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <img 
-            src="/lovable-uploads/db53a601-301d-4a59-b7e1-c69a1d7b8e76.png" 
+            src="lovable-uploads/db53a601-301d-4a59-b7e1-c69a1d7b8e76.png" 
             alt="Ayger Logo" 
             className="h-8"
           />

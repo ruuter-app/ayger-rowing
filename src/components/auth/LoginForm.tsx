@@ -45,7 +45,7 @@ export function LoginForm() {
       <div className="w-full max-w-md space-y-6">
         <div className="text-center space-y-2">
           <img 
-            src="/lovable-uploads/db53a601-301d-4a59-b7e1-c69a1d7b8e76.png" 
+            src="lovable-uploads/db53a601-301d-4a59-b7e1-c69a1d7b8e76.png" 
             alt="Ayger Logo" 
             className="h-16 mx-auto mb-4"
           />

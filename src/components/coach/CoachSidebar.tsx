@@ -75,7 +75,7 @@ export function CoachSidebar() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <img 
-              src="/lovable-uploads/db53a601-301d-4a59-b7e1-c69a1d7b8e76.png" 
+              src="lovable-uploads/db53a601-301d-4a59-b7e1-c69a1d7b8e76.png" 
               alt="Ayger Logo" 
               className="h-8 w-8 flex-shrink-0"
             />

@@ -40,12 +40,12 @@ class TrainingDataService {
   async loadTrainingData(): Promise<ProcessedSession[]> {
     try {
       // Load session summary data
-      const sessionResponse = await fetch('/Takatomo Training Data/training_data.csv');
+      const sessionResponse = await fetch('Takatomo Training Data/training_data.csv');
       const sessionText = await sessionResponse.text();
       this.sessions = this.parseCSV(sessionText, this.parseSessionRow);
 
       // Load detailed logs
-      const logsResponse = await fetch('/Takatomo Training Data/training_logs.csv');
+      const logsResponse = await fetch('Takatomo Training Data/training_logs.csv');
       const logsText = await logsResponse.text();
       this.logs = this.parseCSV(logsText, this.parseLogRow);
 
