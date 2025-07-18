@@ -6,7 +6,7 @@ import { componentTagger } from "lovable-tagger";
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   // GitHub Pages serves from /repository-name/ path
-  base: mode === 'production' ? '/ayger-rowing-app/' : '/',
+  base: mode === 'production' ? '/ayger-rowing/' : '/',
   server: {
     host: "::",
     port: 8080,
