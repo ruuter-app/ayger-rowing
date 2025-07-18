@@ -125,12 +125,12 @@ export function aggregateTrends(sessions: AthleteSession[], period: 'week' | 'mo
     const allSR = group.flatMap(s => s.strokerate);
     const allDist = group.map(s => s.distance[s.distance.length - 1] || 0);
     return {
-      week: key,
+      [period]: key,
       avgStrokeRate: allSR.length ? allSR.reduce((a, b) => a + b, 0) / allSR.length : 0,
       totalDistance: allDist.reduce((a, b) => a + b, 0),
       sessionCount: group.length,
     };
-  }).sort((a, b) => a.week.localeCompare(b.week));
+  }).sort((a, b) => a[period].localeCompare(b[period]));
 }
 
 class PerformanceAnalysis {
