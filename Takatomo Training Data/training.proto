@@ -1,0 +1,65 @@
+syntax = "proto3";
+
+message Training {
+    // Meta data.
+    TrainingMeta meta = 1;
+    // Individual log entries.
+    repeated TrainingLog logs = 2;
+}
+
+enum TrainingType {
+    // Distance training.
+    DISTANCE = 0;
+    // Time training.
+    TIME = 1;
+    // Interval training.
+    INTERVAL = 2;
+    // Free training.
+    FREE = 3;
+}
+
+enum TrainingMode {
+    // Rowing
+    ROWING = 0;
+    // Cycling
+    CYCLING = 1;
+}
+
+message TrainingMeta {
+    // Training start POSIX timestamp, seconds.
+    uint64 start_time = 1;
+    // Training duration in seconds.
+    uint32 duration = 2;
+    // Training distance in meters.
+    uint32 distance = 3;
+    // Training type.
+    TrainingType type = 4;
+    // Training mode.
+    TrainingMode mode = 5;
+    // Training split distance.
+    uint32 split_distance = 6;
+    // Training rest duration.
+    uint32 rest_duration = 7;
+    // Training file id. Not serialized.
+    optional string id = 99;
+}
+
+message GPSPosition {
+    // GPS longitude.
+    double longitude = 1;
+    // GPS latitude.
+    double latitude = 2;
+}
+
+message TrainingLog {
+    // Delta time since start in milliseconds.
+    uint32 delta = 1;
+    // Distance travelled in meters.
+    float distance = 2;
+    // Current stroke rate. Cadence when cycling.
+    uint32 strokerate = 3;
+    // Current heart rate.
+    uint32 heartrate = 4;
+    // GPS position. Not present when tracking is disabled.
+    optional GPSPosition position = 5;
+}
