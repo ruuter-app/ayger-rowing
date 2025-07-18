@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./components/auth/AuthContext";
 import { TrainingDataPage } from "./pages/TrainingDataPage";
 import { PerformancePage } from "./pages/PerformancePage";
@@ -19,7 +19,7 @@ const App = () => (
         <TooltipProvider>
           <Toaster />
           <Sonner />
-          <BrowserRouter>
+          <HashRouter>
           <Routes>
             <Route path="/" element={<PerformancePage />} />
             <Route path="/login" element={<LoginForm />} />
@@ -31,7 +31,7 @@ const App = () => (
             {/* <Route path="/coach/planning" element={<TrainingPlansPage />} /> */}
             <Route path="*" element={<NotFound />} />
           </Routes>
-        </BrowserRouter>
+        </HashRouter>
       </TooltipProvider>
     </AuthProvider>
   {/* </ThemeProvider> */}
