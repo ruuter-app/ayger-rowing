@@ -19,7 +19,7 @@ const SORT_OPTIONS = [
 
 type SortKey = 'date' | 'totalDistance' | 'duration';
 
-const CSV_PATH = 'Takatomo Training Data/training_logs.csv';
+const CSV_PATH = 'takatomo-training-data/training_logs.csv';
 
 export function SessionHistory() {
   const [sessions, setSessions] = useState<AthleteSessionSummary[]>([]);
