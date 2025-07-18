@@ -48,7 +48,10 @@ export async function fetchAthleteSessionsFromCsv(csvPath: string): Promise<Athl
   // Map: sessionId -> { ...arrays }
   const sessions: Record<string, Omit<AthleteSession, 'filename'> & { filename: string }> = {};
   for (let i = 1; i < lines.length; i++) {
+    if (!lines[i] || lines[i].trim() === '') continue; // Skip empty lines
     const row = lines[i].split(',');
+    if (row.length < headers.length) continue; // Skip malformed rows
+
     const filename = row[0];
     const startTime = parseInt(row[1]);
     const delta = parseFloat(row[2]);
