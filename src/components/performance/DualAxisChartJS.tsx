@@ -36,18 +36,18 @@ interface AggregatedData {
   totalDistance: number;
   avgStrokeRate: number;
   avgHeartRate: number;
+  avgPace: number; // Average pace per 500m in seconds
 }
 
 const METRICS = [
-  { key: 'sessionCount', label: 'Session Count', type: 'bar', color: 'hsl(175, 80%, 40%)' }, // Ayger Teal
-  { key: 'totalDistance', label: 'Total Distance (m)', type: 'bar', color: 'hsl(40, 95%, 55%)' }, // Ayger Orange
-  { key: 'avgStrokeRate', label: 'Avg Stroke Rate', type: 'line', color: 'hsl(8, 85%, 65%)' }, // Ayger Coral
-  { key: 'avgHeartRate', label: 'Avg Heart Rate', type: 'line', color: 'hsl(215, 25%, 27%)' }, // Ayger Navy
+  { key: 'avgStrokeRate', label: 'Avg Stroke Rate (spm)', type: 'line', color: 'hsl(8, 85%, 65%)' }, // Ayger Coral
+  { key: 'avgHeartRate', label: 'Avg Heart Rate (bpm)', type: 'line', color: 'hsl(40, 95%, 55%)' }, // Ayger Orange
+  { key: 'avgPace', label: 'Avg Pace (/500m)', type: 'line', color: 'hsl(175, 80%, 40%)' }, // Ayger Teal
 ];
 
 export function DualAxisChartJS() {
   const [data, setData] = useState<AggregatedData[]>([]);
-  const [selectedMetrics, setSelectedMetrics] = useState<string[]>(['sessionCount', 'avgStrokeRate']);
+  const [selectedMetrics, setSelectedMetrics] = useState<string[]>(['avgStrokeRate', 'avgHeartRate']);
   const [period, setPeriod] = useState<'week' | 'month'>('week');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -100,6 +100,7 @@ export function DualAxisChartJS() {
 
       const filename = row[0];
       const startTime = parseInt(row[1]);
+      const delta = parseInt(row[2]) || 0;
       const distance = parseFloat(row[3]) || 0;
       const strokeRate = parseFloat(row[4]) || 0;
       const heartRate = parseFloat(row[5]) || 0;
@@ -112,13 +113,19 @@ export function DualAxisChartJS() {
           startTime,
           distances: [],
           strokeRates: [],
-          heartRates: []
+          heartRates: [],
+          paces: []
         };
       }
 
       sessions[sessionKey].distances.push(distance);
       sessions[sessionKey].strokeRates.push(strokeRate);
       sessions[sessionKey].heartRates.push(heartRate);
+      
+      // Calculate pace per 500m
+      const timeSeconds = delta / 1000; // Convert milliseconds to seconds
+      const pace = distance > 0 ? (timeSeconds / distance) * 500 : 0;
+      sessions[sessionKey].paces.push(pace);
     }
 
     // Group by period
@@ -140,6 +147,7 @@ export function DualAxisChartJS() {
 
       const allStrokeRates = sessionGroup.flatMap(s => s.strokeRates.filter(sr => sr > 0));
       const allHeartRates = sessionGroup.flatMap(s => s.heartRates.filter(hr => hr > 0));
+      const allPaces = sessionGroup.flatMap(s => s.paces.filter(p => p > 0));
 
       return {
         period: periodKey,
@@ -149,6 +157,8 @@ export function DualAxisChartJS() {
           Math.round((allStrokeRates.reduce((a, b) => a + b, 0) / allStrokeRates.length) * 10) / 10 : 0,
         avgHeartRate: allHeartRates.length > 0 ? 
           Math.round(allHeartRates.reduce((a, b) => a + b, 0) / allHeartRates.length) : 0,
+        avgPace: allPaces.length > 0 ? 
+          Math.round((allPaces.reduce((a, b) => a + b, 0) / allPaces.length) * 10) / 10 : 0,
       };
     }).sort((a, b) => a.period.localeCompare(b.period));
   };
@@ -177,11 +187,11 @@ export function DualAxisChartJS() {
 
   // Test data for debugging
   const testData = [
-    { period: '2024-01', sessionCount: 5, totalDistance: 1500, avgStrokeRate: 22, avgHeartRate: 140 },
-    { period: '2024-02', sessionCount: 8, totalDistance: 2200, avgStrokeRate: 24, avgHeartRate: 145 },
-    { period: '2024-03', sessionCount: 6, totalDistance: 1800, avgStrokeRate: 23, avgHeartRate: 142 },
-    { period: '2024-04', sessionCount: 10, totalDistance: 2800, avgStrokeRate: 25, avgHeartRate: 148 },
-    { period: '2024-05', sessionCount: 7, totalDistance: 2100, avgStrokeRate: 24, avgHeartRate: 144 },
+    { period: '2024-01', sessionCount: 5, totalDistance: 1500, avgStrokeRate: 22, avgHeartRate: 140, avgPace: 125 },
+    { period: '2024-02', sessionCount: 8, totalDistance: 2200, avgStrokeRate: 24, avgHeartRate: 145, avgPace: 118 },
+    { period: '2024-03', sessionCount: 6, totalDistance: 1800, avgStrokeRate: 23, avgHeartRate: 142, avgPace: 122 },
+    { period: '2024-04', sessionCount: 10, totalDistance: 2800, avgStrokeRate: 25, avgHeartRate: 148, avgPace: 115 },
+    { period: '2024-05', sessionCount: 7, totalDistance: 2100, avgStrokeRate: 24, avgHeartRate: 144, avgPace: 120 },
   ];
 
   // Use test data if no real data is available
@@ -197,55 +207,31 @@ export function DualAxisChartJS() {
     );
   }
 
-  // Prepare datasets for Chart.js with dual axes
-  // Separate bar and line datasets to ensure proper layering
-  const barDatasets: any[] = [];
-  const lineDatasets: any[] = [];
+  // Prepare datasets for Chart.js - all line charts
+  const datasets: any[] = [];
 
   selectedMetrics.forEach((metricKey, index) => {
     const metric = getMetric(metricKey);
     if (!metric) return;
 
-    const baseConfig = {
+    datasets.push({
       label: metric.label,
       data: chartData.map(item => item[metricKey as keyof AggregatedData] as number),
       borderColor: metric.color,
-      backgroundColor: metric.type === 'bar' ? metric.color.replace(')', ', 0.8)').replace('hsl(', 'hsla(') : metric.color.replace(')', ', 0.2)').replace('hsl(', 'hsla('),
+      backgroundColor: metric.color.replace(')', ', 0.2)').replace('hsl(', 'hsla('),
       borderWidth: 3,
+      type: 'line',
+      tension: 0.2,
+      fill: false,
+      pointBackgroundColor: metric.color,
+      pointBorderColor: metric.color,
+      pointBorderWidth: 2,
+      pointRadius: 4,
+      pointHoverRadius: 6,
+      pointHoverBorderWidth: 3,
       yAxisID: index === 0 ? 'y' : 'y1', // First metric on left axis, second on right
-    };
-
-    // Add type-specific configurations
-    if (metric.type === 'line') {
-      lineDatasets.push({
-        ...baseConfig,
-        type: 'line',
-        tension: 0.2,
-        fill: false,
-        pointBackgroundColor: metric.color,
-        pointBorderColor: metric.color,
-        pointBorderWidth: 2,
-        pointRadius: 4,
-        pointHoverRadius: 6,
-        pointHoverBorderWidth: 3,
-        order: 1, // Higher order = rendered later (on top)
-      });
-    } else {
-      barDatasets.push({
-        ...baseConfig,
-        type: 'bar',
-        borderRadius: 4,
-        order: 0, // Lower order = rendered first (behind)
-      });
-    }
+    });
   });
-
-  // Combine datasets with bars first, then lines (so lines appear on top)
-  // Also add stack property to ensure proper layering
-  const datasets = [
-    ...barDatasets.map(dataset => ({ ...dataset, stack: 'bars' })),
-    ...lineDatasets.map(dataset => ({ ...dataset, stack: 'lines' }))
-  ];
 
   const chartConfig = {
     labels: chartData.map(item => item.period),

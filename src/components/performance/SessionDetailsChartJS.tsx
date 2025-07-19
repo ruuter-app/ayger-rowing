@@ -39,6 +39,7 @@ interface SessionData {
   distance: number;
   strokeRate: number;
   heartRate: number;
+  pace: number; // Pace per 500m in seconds
 }
 
 interface Session {
@@ -55,15 +56,15 @@ interface Session {
 }
 
 const METRICS = [
-  { key: 'distance', label: 'Distance (m)', type: 'bar', color: 'hsl(175, 80%, 40%)' }, // Ayger Teal
-  { key: 'strokeRate', label: 'Stroke Rate', type: 'line', color: 'hsl(8, 85%, 65%)' }, // Ayger Coral
-  { key: 'heartRate', label: 'Heart Rate', type: 'line', color: 'hsl(40, 95%, 55%)' }, // Ayger Orange
+  { key: 'strokeRate', label: 'Stroke Rate (spm)', type: 'line', color: 'hsl(8, 85%, 65%)' }, // Ayger Coral
+  { key: 'heartRate', label: 'Heart Rate (bpm)', type: 'line', color: 'hsl(40, 95%, 55%)' }, // Ayger Orange
+  { key: 'pace', label: 'Pace (/500m)', type: 'line', color: 'hsl(175, 80%, 40%)' }, // Ayger Teal
 ];
 
 export function SessionDetailsChartJS() {
   const [sessions, setSessions] = useState<Session[]>([]);
   const [selectedSession, setSelectedSession] = useState<Session | null>(null);
-  const [selectedMetrics, setSelectedMetrics] = useState<string[]>(['distance', 'strokeRate']);
+  const [selectedMetrics, setSelectedMetrics] = useState<string[]>(['strokeRate', 'heartRate']);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -175,12 +176,20 @@ export function SessionDetailsChartJS() {
       session.dataPoints.sort((a: any, b: any) => a.delta - b.delta);
 
       // Convert to chart data format
-      const data: SessionData[] = session.dataPoints.map((point: any, index: number) => ({
-        timeMinutes: Math.round(point.delta / 60000), // Convert milliseconds to minutes
-        distance: point.distance,
-        strokeRate: point.strokeRate,
-        heartRate: point.heartRate
-      }));
+      const data: SessionData[] = session.dataPoints.map((point: any, index: number) => {
+        // Calculate pace per 500m (in seconds)
+        // Pace = (time in seconds / distance in meters) * 500
+        const timeSeconds = point.delta / 1000; // Convert milliseconds to seconds
+        const pace = point.distance > 0 ? (timeSeconds / point.distance) * 500 : 0;
+        
+        return {
+          timeMinutes: Math.round(point.delta / 60000), // Convert milliseconds to minutes
+          distance: point.distance,
+          strokeRate: point.strokeRate,
+          heartRate: point.heartRate,
+          pace: Math.round(pace * 10) / 10 // Round to 1 decimal place
+        };
+      });
 
       return {
         filename: session.filename,
@@ -260,58 +269,34 @@ export function SessionDetailsChartJS() {
     );
   }
 
-  // Prepare datasets for Chart.js with dual axes
-  // Separate bar and line datasets to ensure proper layering
-  const barDatasets: any[] = [];
-  const lineDatasets: any[] = [];
+  // Prepare datasets for Chart.js - all line charts
+  const datasets: any[] = [];
 
   selectedMetrics.forEach((metricKey, index) => {
     const metric = getMetric(metricKey);
     if (!metric) return;
 
-    const baseConfig = {
+    datasets.push({
       label: metric.label,
       data: displaySession.data.map(item => item[metricKey as keyof SessionData] as number),
       borderColor: metric.color,
-      backgroundColor: metric.type === 'bar' ? metric.color.replace(')', ', 0.8)').replace('hsl(', 'hsla(') : metric.color.replace(')', ', 0.2)').replace('hsl(', 'hsla('),
+      backgroundColor: metric.color.replace(')', ', 0.2)').replace('hsl(', 'hsla('),
       borderWidth: 3,
+      type: 'line',
+      tension: 0.2,
+      fill: false,
+      pointBackgroundColor: metric.color,
+      pointBorderColor: metric.color,
+      pointBorderWidth: 2,
+      pointRadius: 4,
+      pointHoverRadius: 6,
+      pointHoverBorderWidth: 3,
       yAxisID: index === 0 ? 'y' : 'y1', // First metric on left axis, second on right
-    };
-
-    // Add type-specific configurations
-    if (metric.type === 'line') {
-      lineDatasets.push({
-        ...baseConfig,
-        type: 'line',
-        tension: 0.2,
-        fill: false,
-        pointBackgroundColor: metric.color,
-        pointBorderColor: metric.color,
-        pointBorderWidth: 2,
-        pointRadius: 4,
-        pointHoverRadius: 6,
-        pointHoverBorderWidth: 3,
-        order: 1, // Higher order = rendered later (on top)
-      });
-    } else {
-      barDatasets.push({
-        ...baseConfig,
-        type: 'bar',
-        borderRadius: 4,
-        order: 0, // Lower order = rendered first (behind)
-      });
-    }
+    });
   });
 
-  // Combine datasets with bars first, then lines (so lines appear on top)
-  // Also add stack property to ensure proper layering
-  const datasets = [
-    ...barDatasets.map(dataset => ({ ...dataset, stack: 'bars' })),
-    ...lineDatasets.map(dataset => ({ ...dataset, stack: 'lines' }))
-  ];
-
   const chartConfig = {
-    labels: displaySession.data.map(item => item.timeMinutes),
+    labels: displaySession.data.map(item => item.distance), // Use distance on x-axis
     datasets,
   };
 
@@ -350,7 +335,7 @@ export function SessionDetailsChartJS() {
       x: {
         title: {
           display: true,
-          text: 'Time (minutes)',
+          text: 'Distance (m)',
           color: 'hsl(215, 25%, 27%)', // Ayger Navy
           font: {
             weight: '500',
