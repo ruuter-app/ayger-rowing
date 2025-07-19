@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { SidebarProvider } from '../components/ui/sidebar';
 import { AthleteSidebar } from '../components/athlete/AthleteSidebar';
+import { PerformanceDashboard } from '../components/performance/PerformanceDashboard';
 import { useAuth } from '../components/auth/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
@@ -29,18 +30,6 @@ export function PerformancePage() {
 
   console.log('PerformancePage: Rendering main content');
   
-  // Simple test first
-  return (
-    <div style={{ padding: '20px', backgroundColor: 'white', color: 'black' }}>
-      <h1>Performance Page Test</h1>
-      <p>User: {user?.name}</p>
-      <p>Email: {user?.email}</p>
-      <p>Role: {user?.role}</p>
-    </div>
-  );
-  
-  // Original complex version (commented out for testing)
-  /*
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-background">
@@ -60,11 +49,10 @@ export function PerformancePage() {
           </div>
           
           <div className="container mx-auto px-6 py-8">
-            <div>Performance Dashboard - Charts temporarily disabled for testing</div>
+            <PerformanceDashboard />
           </div>
         </main>
       </div>
     </SidebarProvider>
   );
-  */
 } 
