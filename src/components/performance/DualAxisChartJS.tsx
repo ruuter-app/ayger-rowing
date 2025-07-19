@@ -228,18 +228,24 @@ export function DualAxisChartJS() {
         pointRadius: 4,
         pointHoverRadius: 6,
         pointHoverBorderWidth: 3,
+        order: 1, // Higher order = rendered later (on top)
       });
     } else {
       barDatasets.push({
         ...baseConfig,
         type: 'bar',
         borderRadius: 4,
+        order: 0, // Lower order = rendered first (behind)
       });
     }
   });
 
   // Combine datasets with bars first, then lines (so lines appear on top)
-  const datasets = [...barDatasets, ...lineDatasets];
+  // Also add stack property to ensure proper layering
+  const datasets = [
+    ...barDatasets.map(dataset => ({ ...dataset, stack: 'bars' })),
+    ...lineDatasets.map(dataset => ({ ...dataset, stack: 'lines' }))
+  ];
 
   const chartConfig = {
     labels: chartData.map(item => item.period),
