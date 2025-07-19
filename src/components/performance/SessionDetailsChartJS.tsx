@@ -176,7 +176,7 @@ export function SessionDetailsChartJS() {
   };
 
   const formatDistance = (meters: number) => {
-    return meters >= 1000 ? `${(meters / 1000).toFixed(1)}km` : `${meters}m`;
+    return meters >= 1000 ? `${(meters / 1000).toFixed(1)}km` : `${Math.round(meters)}m`;
   };
 
   const formatPace = (seconds: number) => {
@@ -372,9 +372,6 @@ export function SessionDetailsChartJS() {
       <CardHeader>
         <div className="flex items-center justify-between mb-4">
           <CardTitle>Session Details</CardTitle>
-          {selectedSession && (
-            <Badge variant="outline">FREE</Badge>
-          )}
         </div>
 
         {/* Session Summary Metrics */}
