@@ -3,6 +3,8 @@ import { AggregatedMetricsChart } from './AggregatedMetricsChart';
 import { SessionDetailsChart } from './SessionDetailsChart';
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer } from 'recharts';
 import { ChartWrapper } from './ChartWrapper';
+import { NativeChart } from './NativeChart';
+import { NativeAggregatedChart } from './NativeAggregatedChart';
 
 interface PerformanceDashboardProps {
   className?: string;
@@ -15,6 +17,15 @@ const debugData = [
   { name: 'C', value: 15 },
 ];
 
+// Native chart test data
+const nativeTestData = [
+  { x: 'A', y: 10 },
+  { x: 'B', y: 20 },
+  { x: 'C', y: 15 },
+  { x: 'D', y: 25 },
+  { x: 'E', y: 18 },
+];
+
 export function PerformanceDashboard({ className }: PerformanceDashboardProps) {
   useEffect(() => {
     console.log('PerformanceDashboard mounted');
@@ -25,7 +36,32 @@ export function PerformanceDashboard({ className }: PerformanceDashboardProps) {
 
   return (
     <div className={`space-y-8 ${className}`}>
-      {/* Debug Chart to test Recharts */}
+      {/* Native Chart Test */}
+      <div className="space-y-4">
+        <NativeChart 
+          data={nativeTestData}
+          width={600}
+          height={300}
+          type="line"
+          color="#2563eb"
+          title="Native SVG Line Chart Test"
+          xLabel="Categories"
+          yLabel="Values"
+        />
+        
+        <NativeChart 
+          data={nativeTestData}
+          width={600}
+          height={300}
+          type="bar"
+          color="#059669"
+          title="Native SVG Bar Chart Test"
+          xLabel="Categories"
+          yLabel="Values"
+        />
+      </div>
+
+      {/* Recharts Debug Chart */}
       <div className="border p-4 rounded">
         <h3 className="text-lg font-semibold mb-4">Debug Chart (Recharts Test)</h3>
         <p className="text-sm text-gray-600 mb-2">Data: {JSON.stringify(debugData)}</p>
@@ -41,12 +77,15 @@ export function PerformanceDashboard({ className }: PerformanceDashboardProps) {
           </ChartWrapper>
         </div>
       </div>
-      
-      {/* Aggregated Metrics Chart */}
-      <AggregatedMetricsChart />
-      
-      {/* Session Details Chart */}
-      <SessionDetailsChart />
+             
+       {/* Native Aggregated Metrics Chart */}
+       <NativeAggregatedChart />
+       
+       {/* Recharts Aggregated Metrics Chart */}
+       <AggregatedMetricsChart />
+       
+       {/* Session Details Chart */}
+       <SessionDetailsChart />
     </div>
   );
 } 
