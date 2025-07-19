@@ -12,30 +12,34 @@ import { LoginForm } from "./components/auth/LoginForm";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    {/* <ThemeProvider defaultTheme="system" storageKey="ayger-ui-theme"> */}
-      <AuthProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <HashRouter>
-          <Routes>
-            <Route path="/" element={<PerformancePage />} />
-            <Route path="/login" element={<LoginForm />} />
-            <Route path="/athlete/training-data" element={<TrainingDataPage />} />
-            <Route path="/athlete/performance" element={<PerformancePage />} />
-            {/* <Route path="/athlete/upload" element={<UploadPage />} /> */}
-            <Route path="/coach/dashboard" element={<CoachDashboard />} />
-            {/* <Route path="/coach/athletes" element={<MyAthletesPage />} /> */}
-            {/* <Route path="/coach/planning" element={<TrainingPlansPage />} /> */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </HashRouter>
-      </TooltipProvider>
-    </AuthProvider>
-  {/* </ThemeProvider> */}
-  </QueryClientProvider>
-);
+const App = () => {
+  console.log('App: Component rendering');
+  
+  return (
+    <QueryClientProvider client={queryClient}>
+      {/* <ThemeProvider defaultTheme="system" storageKey="ayger-ui-theme"> */}
+        <AuthProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Sonner />
+            <HashRouter>
+            <Routes>
+              <Route path="/" element={<PerformancePage />} />
+              <Route path="/login" element={<LoginForm />} />
+              <Route path="/athlete/training-data" element={<TrainingDataPage />} />
+              <Route path="/athlete/performance" element={<PerformancePage />} />
+              {/* <Route path="/athlete/upload" element={<UploadPage />} /> */}
+              <Route path="/coach/dashboard" element={<CoachDashboard />} />
+              {/* <Route path="/coach/athletes" element={<MyAthletesPage />} /> */}
+              {/* <Route path="/coach/planning" element={<TrainingPlansPage />} /> */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </HashRouter>
+        </TooltipProvider>
+      </AuthProvider>
+    {/* </ThemeProvider> */}
+    </QueryClientProvider>
+  );
+};
 
 export default App;

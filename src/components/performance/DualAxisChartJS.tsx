@@ -198,29 +198,15 @@ export function DualAxisChartJS() {
     const metric = getMetric(metricKey);
     if (!metric) return null;
 
-    const baseConfig = {
+    return {
       label: metric.label,
       data: chartData.map(item => item[metricKey as keyof AggregatedData] as number),
       borderColor: metric.color,
-      backgroundColor: metric.type === 'bar' ? metric.color + '80' : metric.color + '20',
+      backgroundColor: metric.color + '20',
       borderWidth: 2,
+      tension: 0.1,
       yAxisID: index === 0 ? 'y' : 'y1', // First metric on left axis, second on right
     };
-
-    // Add type-specific configurations
-    if (metric.type === 'line') {
-      return {
-        ...baseConfig,
-        type: 'line',
-        tension: 0.1,
-        fill: false,
-      };
-    } else {
-      return {
-        ...baseConfig,
-        type: 'bar',
-      };
-    }
   }).filter(Boolean);
 
   const chartConfig = {
