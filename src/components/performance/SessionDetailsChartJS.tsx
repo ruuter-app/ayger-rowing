@@ -64,7 +64,7 @@ const METRICS = [
 export function SessionDetailsChartJS() {
   const [sessions, setSessions] = useState<Session[]>([]);
   const [selectedSession, setSelectedSession] = useState<Session | null>(null);
-  const [selectedMetrics, setSelectedMetrics] = useState<string[]>(['strokeRate', 'heartRate']);
+  const [selectedMetrics, setSelectedMetrics] = useState<string[]>(['pace', 'strokeRate', 'heartRate']);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -206,7 +206,7 @@ export function SessionDetailsChartJS() {
       if (selectedMetrics.length > 1) {
         setSelectedMetrics(prev => prev.filter(m => m !== metricKey));
       }
-    } else if (selectedMetrics.length < 2) {
+    } else if (selectedMetrics.length < 3) {
       setSelectedMetrics(prev => [...prev, metricKey]);
     }
   };
@@ -272,9 +272,13 @@ export function SessionDetailsChartJS() {
   // Prepare datasets for Chart.js - all line charts
   const datasets: any[] = [];
 
-  selectedMetrics.forEach((metricKey, index) => {
+  selectedMetrics.forEach((metricKey) => {
     const metric = getMetric(metricKey);
     if (!metric) return;
+
+    // Determine which axis to use based on the image layout
+    const isPace = metricKey === 'pace';
+    const yAxisID = isPace ? 'y' : 'y1'; // Pace on left, others on right
 
     datasets.push({
       label: metric.label,
@@ -291,17 +295,20 @@ export function SessionDetailsChartJS() {
       pointRadius: 4,
       pointHoverRadius: 6,
       pointHoverBorderWidth: 3,
-      yAxisID: index === 0 ? 'y' : 'y1', // First metric on left axis, second on right
+      yAxisID: yAxisID,
     });
   });
 
   const chartConfig = {
-    labels: displaySession.data.map(item => item.distance), // Use distance on x-axis
+    labels: displaySession.data.map(item => item.timeMinutes), // Use time on x-axis
     datasets,
   };
 
-  const leftMetric = getMetric(selectedMetrics[0]);
-  const rightMetric = getMetric(selectedMetrics[1]);
+  // Determine which metric goes on which axis based on the image
+  const paceMetric = selectedMetrics.find(m => m === 'pace');
+  const otherMetrics = selectedMetrics.filter(m => m !== 'pace');
+  const leftMetric = paceMetric ? getMetric(paceMetric) : getMetric(selectedMetrics[0]);
+  const rightMetric = otherMetrics.length > 0 ? getMetric(otherMetrics[0]) : getMetric(selectedMetrics[1]);
 
   const options = {
     responsive: true,
@@ -323,7 +330,7 @@ export function SessionDetailsChartJS() {
       },
       title: {
         display: true,
-        text: `Session: ${displaySession.filename}`,
+        text: 'Workout Graph',
         font: {
           size: 16,
           weight: '600',
@@ -335,7 +342,7 @@ export function SessionDetailsChartJS() {
       x: {
         title: {
           display: true,
-          text: 'Distance (m)',
+          text: 'Time',
           color: 'hsl(215, 25%, 27%)', // Ayger Navy
           font: {
             weight: '500',
@@ -346,13 +353,19 @@ export function SessionDetailsChartJS() {
         },
         ticks: {
           color: 'hsl(215, 25%, 27%)', // Ayger Navy
+          callback: function(value: any, index: any) {
+            const minutes = displaySession.data[index]?.timeMinutes || 0;
+            const hours = Math.floor(minutes / 60);
+            const mins = minutes % 60;
+            return `${hours}:${mins.toString().padStart(2, '0')}`;
+          }
         },
       },
       y: {
         type: 'linear' as const,
         display: true,
         position: 'left' as const,
-        beginAtZero: true,
+        beginAtZero: false,
         title: {
           display: true,
           text: leftMetric?.label || '',
@@ -366,7 +379,18 @@ export function SessionDetailsChartJS() {
         },
         ticks: {
           color: 'hsl(215, 25%, 27%)', // Ayger Navy
+          callback: function(value: any) {
+            if (leftMetric?.key === 'pace') {
+              // Format pace as MM:SS
+              const minutes = Math.floor(value / 60);
+              const seconds = Math.floor(value % 60);
+              return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            }
+            return value;
+          }
         },
+        // For pace, reverse the scale so faster times are at the top
+        reverse: leftMetric?.key === 'pace',
       },
       y1: {
         type: 'linear' as const,
@@ -375,7 +399,7 @@ export function SessionDetailsChartJS() {
         beginAtZero: true,
         title: {
           display: true,
-          text: rightMetric?.label || '',
+          text: 'Stroke Rate & Heart Rate',
           color: 'hsl(215, 25%, 27%)', // Ayger Navy
           font: {
             weight: '500',
@@ -386,6 +410,14 @@ export function SessionDetailsChartJS() {
         },
         ticks: {
           color: 'hsl(215, 25%, 27%)', // Ayger Navy
+          callback: function(value: any) {
+            // Show both stroke rate and heart rate scales
+            if (value <= 30) {
+              return value; // Stroke rate scale
+            } else {
+              return value; // Heart rate scale
+            }
+          }
         },
       },
     },
@@ -472,14 +504,14 @@ export function SessionDetailsChartJS() {
             </div>
             
             <div className="flex gap-2 items-center">
-              <span className="text-sm text-muted-foreground">Metrics (select 2):</span>
+              <span className="text-sm text-muted-foreground">Metrics (select up to 3):</span>
               {METRICS.map(metric => (
                 <Button
                   key={metric.key}
                   variant={selectedMetrics.includes(metric.key) ? "default" : "outline"}
                   size="sm"
                   onClick={() => handleMetricToggle(metric.key)}
-                  disabled={!selectedMetrics.includes(metric.key) && selectedMetrics.length >= 2}
+                  disabled={!selectedMetrics.includes(metric.key) && selectedMetrics.length >= 3}
                 >
                   {metric.label}
                 </Button>
