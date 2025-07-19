@@ -22,6 +22,12 @@ const athleteNavItems = [
     icon: TrendingUp, 
     label: 'Performance Analysis', 
     description: 'Data insights and trends' 
+  },
+  { 
+    to: '/athlete/upload', 
+    icon: Upload, 
+    label: 'Upload Session', 
+    description: 'Upload training data' 
   }
 ];
 

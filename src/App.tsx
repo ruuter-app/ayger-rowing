@@ -6,6 +6,7 @@ import { HashRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./components/auth/AuthContext";
 
 import { PerformancePage } from "./pages/PerformancePage";
+import { UploadPage } from "./pages/UploadPage";
 import { CoachDashboard } from "./pages/CoachDashboard";
 import NotFound from "./pages/NotFound";
 import { LoginForm } from "./components/auth/LoginForm";
@@ -28,7 +29,7 @@ const App = () => {
               <Route path="/login" element={<LoginForm />} />
 
               <Route path="/athlete/performance" element={<PerformancePage />} />
-              {/* <Route path="/athlete/upload" element={<UploadPage />} /> */}
+              <Route path="/athlete/upload" element={<UploadPage />} />
               <Route path="/coach/dashboard" element={<CoachDashboard />} />
               {/* <Route path="/coach/athletes" element={<MyAthletesPage />} /> */}
               {/* <Route path="/coach/planning" element={<TrainingPlansPage />} /> */}
