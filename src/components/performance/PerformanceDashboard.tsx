@@ -5,6 +5,8 @@ import { LineChart, Line, XAxis, YAxis, ResponsiveContainer } from 'recharts';
 import { ChartWrapper } from './ChartWrapper';
 import { NativeChart } from './NativeChart';
 import { NativeAggregatedChart } from './NativeAggregatedChart';
+import { ChartJSChart } from './ChartJSChart';
+import { DualAxisChartJS } from './DualAxisChartJS';
 
 interface PerformanceDashboardProps {
   className?: string;
@@ -78,6 +80,12 @@ export function PerformanceDashboard({ className }: PerformanceDashboardProps) {
         </div>
       </div>
              
+       {/* Chart.js Implementation */}
+       <ChartJSChart />
+       
+       {/* Dual-Axis Chart.js Implementation */}
+       <DualAxisChartJS />
+       
        {/* Native Aggregated Metrics Chart */}
        <NativeAggregatedChart />
        
