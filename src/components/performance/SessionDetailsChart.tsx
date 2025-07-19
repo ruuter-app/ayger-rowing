@@ -151,6 +151,21 @@ export function SessionDetailsChart() {
     );
   }
 
+  // Test data for debugging
+  const testSession = {
+    filename: 'test-session',
+    startTime: Date.now() / 1000,
+    data: [
+      { timeMinutes: 0, distance: 0, strokeRate: 20, heartRate: 120 },
+      { timeMinutes: 1, distance: 100, strokeRate: 22, heartRate: 130 },
+      { timeMinutes: 2, distance: 220, strokeRate: 24, heartRate: 140 },
+      { timeMinutes: 3, distance: 350, strokeRate: 23, heartRate: 135 },
+      { timeMinutes: 4, distance: 480, strokeRate: 25, heartRate: 145 },
+    ]
+  };
+
+  const displaySession = selectedSession || testSession;
+
   return (
     <Card>
       <CardHeader>
@@ -198,18 +213,14 @@ export function SessionDetailsChart() {
       </CardHeader>
       
       <CardContent>
-        {!selectedSession ? (
-          <div className="text-center py-8 text-muted-foreground">
-            Please select a session to view details
-          </div>
-        ) : selectedSession.data.length === 0 ? (
+        {displaySession.data.length === 0 ? (
           <div className="text-center py-8 text-muted-foreground">
             No data available for this session
           </div>
         ) : (
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
-              <ComposedChart data={selectedSession.data} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+              <ComposedChart data={displaySession.data} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis 
                   dataKey="timeMinutes" 
