@@ -16,6 +16,8 @@ import { Chart } from 'react-chartjs-2';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { Badge } from '../ui/badge';
+import { MapPin, Clock, Target, Heart } from 'lucide-react';
 
 // Register all required controllers and elements
 ChartJS.register(
@@ -165,6 +167,22 @@ export function SessionDetailsChartJS() {
 
   const formatSessionDate = (startTime: number) => {
     return new Date(startTime * 1000).toLocaleDateString();
+  };
+
+  const formatDuration = (minutes: number) => {
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    return hours > 0 ? `${hours}h ${mins}m` : `${mins}m`;
+  };
+
+  const formatDistance = (meters: number) => {
+    return meters >= 1000 ? `${(meters / 1000).toFixed(1)}km` : `${meters}m`;
+  };
+
+  const formatPace = (seconds: number) => {
+    const minutes = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${minutes}:${secs.toString().padStart(2, '0')}`;
   };
 
   // Test data for debugging
@@ -352,7 +370,54 @@ export function SessionDetailsChartJS() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Session Details</CardTitle>
+        <div className="flex items-center justify-between mb-4">
+          <CardTitle>Session Details</CardTitle>
+          {selectedSession && (
+            <Badge variant="outline">FREE</Badge>
+          )}
+        </div>
+
+        {/* Session Summary Metrics */}
+        {selectedSession && (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 p-4 bg-muted/30 rounded-lg">
+            <div className="flex items-center gap-2">
+              <MapPin className="h-4 w-4 text-muted-foreground" />
+              <div>
+                <div className="text-sm font-medium">{formatDistance(Math.max(...displaySession.data.map(d => d.distance)))}</div>
+                <div className="text-xs text-muted-foreground">Distance</div>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <Clock className="h-4 w-4 text-muted-foreground" />
+              <div>
+                <div className="text-sm font-medium">{formatDuration(Math.max(...displaySession.data.map(d => d.timeMinutes)))}</div>
+                <div className="text-xs text-muted-foreground">Duration</div>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <Target className="h-4 w-4 text-muted-foreground" />
+              <div>
+                <div className="text-sm font-medium">
+                  {formatPace(displaySession.data.length > 0 ? 
+                    (Math.max(...displaySession.data.map(d => d.timeMinutes)) * 60 / Math.max(...displaySession.data.map(d => d.distance))) * 500 : 0
+                  )}
+                </div>
+                <div className="text-xs text-muted-foreground">Avg Pace</div>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <Heart className="h-4 w-4 text-muted-foreground" />
+              <div>
+                <div className="text-sm font-medium">
+                  {displaySession.data.length > 0 ? 
+                    Math.round(displaySession.data.reduce((sum, d) => sum + d.heartRate, 0) / displaySession.data.length) : 0
+                  } bpm
+                </div>
+                <div className="text-xs text-muted-foreground">Avg Heart Rate</div>
+              </div>
+            </div>
+          </div>
+        )}
         
         {/* Controls */}
         <div className="flex flex-wrap gap-4 items-center">
