@@ -86,7 +86,20 @@ export function SessionDetailsChartJS() {
       }
       
       const csvText = await response.text();
+      console.log('CSV loaded successfully, length:', csvText.length);
+      
       const parsedSessions = parseSessionsFromCSV(csvText);
+      console.log('Parsed sessions:', parsedSessions.length);
+      
+      // Log GPS data for the first session
+      if (parsedSessions.length > 0) {
+        const firstSession = parsedSessions[0];
+        console.log('First session GPS data:', {
+          filename: firstSession.filename,
+          rawDataLength: firstSession.rawData?.length,
+          hasGPS: firstSession.rawData?.some(point => point.longitude && point.latitude)
+        });
+      }
       
       setSessions(parsedSessions);
       if (parsedSessions.length > 0) {

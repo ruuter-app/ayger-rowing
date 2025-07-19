@@ -30,10 +30,16 @@ export function SessionMap({ sessionData, className }: SessionMapProps) {
   const mapInstanceRef = useRef<L.Map | null>(null);
 
   useEffect(() => {
-    if (!mapRef.current || !sessionData) return;
+    console.log('SessionMap useEffect triggered:', { sessionData, mapRef: !!mapRef.current });
+    
+    if (!mapRef.current || !sessionData) {
+      console.log('SessionMap: Missing mapRef or sessionData');
+      return;
+    }
 
     // Clean up previous map instance
     if (mapInstanceRef.current) {
+      console.log('SessionMap: Removing previous map instance');
       mapInstanceRef.current.remove();
     }
 
@@ -52,7 +58,10 @@ export function SessionMap({ sessionData, className }: SessionMapProps) {
         strokeRate: point.strokerate
       })) || [];
 
+    console.log('SessionMap: Valid coordinates found:', validCoordinates.length);
+
     if (validCoordinates.length === 0) {
+      console.log('SessionMap: No valid coordinates found');
       // Show placeholder if no valid coordinates
       return;
     }
@@ -60,6 +69,8 @@ export function SessionMap({ sessionData, className }: SessionMapProps) {
     // Calculate bounds
     const bounds = L.latLngBounds(validCoordinates.map(coord => [coord.lat, coord.lng]));
 
+    console.log('SessionMap: Creating map instance');
+    
     // Create map instance
     const map = L.map(mapRef.current, {
       zoomControl: true,
@@ -70,6 +81,8 @@ export function SessionMap({ sessionData, className }: SessionMapProps) {
       dragging: true,
       touchZoom: true
     });
+    
+    console.log('SessionMap: Map instance created successfully');
 
     // Add OpenStreetMap tiles
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
