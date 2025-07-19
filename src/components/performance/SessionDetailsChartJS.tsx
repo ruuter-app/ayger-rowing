@@ -45,6 +45,13 @@ interface Session {
   filename: string;
   startTime: number;
   data: SessionData[];
+  rawData?: Array<{
+    longitude: string;
+    latitude: string;
+    distance: number;
+    heartrate: number;
+    strokerate: number;
+  }>;
 }
 
 const METRICS = [
@@ -112,6 +119,8 @@ export function SessionDetailsChartJS() {
       const distance = parseFloat(row[3]) || 0;
       const strokeRate = parseFloat(row[4]) || 0;
       const heartRate = parseFloat(row[5]) || 0;
+      const longitude = row[6] || '';
+      const latitude = row[7] || '';
 
       if (isNaN(startTime) || startTime <= 0) continue;
 
@@ -120,7 +129,8 @@ export function SessionDetailsChartJS() {
         sessionsMap[sessionKey] = {
           filename,
           startTime,
-          dataPoints: []
+          dataPoints: [],
+          rawData: []
         };
       }
 
@@ -129,6 +139,15 @@ export function SessionDetailsChartJS() {
         distance,
         strokeRate,
         heartRate
+      });
+
+      // Add raw data for GPS coordinates
+      sessionsMap[sessionKey].rawData.push({
+        longitude,
+        latitude,
+        distance,
+        heartrate: heartRate,
+        strokerate: strokeRate
       });
     }
 
@@ -148,7 +167,8 @@ export function SessionDetailsChartJS() {
       return {
         filename: session.filename,
         startTime: session.startTime,
-        data
+        data,
+        rawData: session.rawData
       };
     }).filter(session => session.data.length > 0)
       .sort((a, b) => b.startTime - a.startTime); // Sort by newest first
@@ -473,7 +493,7 @@ export function SessionDetailsChartJS() {
       </Card>
 
       {/* Session Map */}
-      <SessionMap sessionData={selectedSession} />
+      <SessionMap sessionData={selectedSession ? { rawData: selectedSession.rawData || [] } : null} />
     </div>
   );
 } 

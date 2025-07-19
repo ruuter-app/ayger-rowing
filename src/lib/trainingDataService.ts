@@ -44,7 +44,7 @@ class TrainingDataService {
       const sessionText = await sessionResponse.text();
       this.sessions = this.parseCSV(sessionText, this.parseSessionRow);
 
-      // Load detailed logs
+      // Load detailed logs (with GPS coordinates for 20250530-073626.pb session)
       const logsResponse = await fetch('takatomo-training-data/training_logs.csv');
       const logsText = await logsResponse.text();
       this.logs = this.parseCSV(logsText, this.parseLogRow);
