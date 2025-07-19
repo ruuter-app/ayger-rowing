@@ -1,5 +1,5 @@
 import React from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
+// Charts temporarily disabled - using Chart.js in PerformanceDashboard instead
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Session } from '../../types';
 
@@ -79,38 +79,12 @@ export function SessionChart({ session, metric }: SessionChartProps) {
         <CardTitle className="text-lg">{config.title}</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="h-64 w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={session.data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-              <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
-              <XAxis 
-                dataKey="time" 
-                tickFormatter={formatTime}
-                type="number"
-                domain={['dataMin', 'dataMax']}
-              />
-              <YAxis 
-                tickFormatter={config.formatter}
-                domain={config.domain}
-              />
-              <Tooltip content={<CustomTooltip />} />
-              <ReferenceLine 
-                y={averageValue} 
-                stroke={config.color} 
-                strokeDasharray="5 5" 
-                opacity={0.7}
-                label={{ value: `Avg: ${config.formatter(averageValue)}`, position: "right" }}
-              />
-              <Line 
-                type="monotone" 
-                dataKey={metric} 
-                stroke={config.color} 
-                strokeWidth={2}
-                dot={false}
-                activeDot={{ r: 4, fill: config.color }}
-              />
-            </LineChart>
-          </ResponsiveContainer>
+        <div className="h-64 w-full flex items-center justify-center bg-gray-50 border border-gray-200 rounded">
+          <div className="text-center">
+            <div className="text-gray-400 mb-2 text-4xl">📈</div>
+            <p className="text-gray-500">Chart will be available soon</p>
+            <p className="text-sm text-gray-400">Visit Performance Analysis for detailed charts</p>
+          </div>
         </div>
       </CardContent>
     </Card>

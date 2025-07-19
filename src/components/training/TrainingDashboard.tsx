@@ -15,8 +15,8 @@ import {
   BarChart3
 } from 'lucide-react';
 import { trainingDataService, ProcessedSession } from '../../lib/trainingDataService';
-import { SessionChart } from '../charts/SessionChart';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
+// SessionChart temporarily disabled
+// Charts temporarily disabled - using Chart.js in PerformanceDashboard instead
 
 interface TrainingDashboardProps {
   className?: string;
@@ -195,25 +195,12 @@ export function TrainingDashboard({ className }: TrainingDashboardProps) {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="h-64">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={distanceData}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="date" />
-                      <YAxis />
-                      <Tooltip 
-                        formatter={(value: any) => [formatDistance(value), 'Distance']}
-                        labelFormatter={(label) => `Date: ${label}`}
-                      />
-                      <Line 
-                        type="monotone" 
-                        dataKey="distance" 
-                        stroke="#3b82f6" 
-                        strokeWidth={2}
-                        dot={{ fill: '#3b82f6', strokeWidth: 2, r: 4 }}
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
+                <div className="h-64 flex items-center justify-center bg-gray-50 border border-gray-200 rounded">
+                  <div className="text-center">
+                    <TrendingUp className="h-12 w-12 mx-auto text-gray-400 mb-2" />
+                    <p className="text-gray-500">Distance chart will be available soon</p>
+                    <p className="text-sm text-gray-400">Visit Performance Analysis for detailed charts</p>
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -227,23 +214,12 @@ export function TrainingDashboard({ className }: TrainingDashboardProps) {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="h-64">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={heartRateData}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="date" />
-                      <YAxis />
-                      <Tooltip 
-                        formatter={(value: any) => [`${value} bpm`, 'Heart Rate']}
-                        labelFormatter={(label) => `Date: ${label}`}
-                      />
-                      <Bar 
-                        dataKey="heartRate" 
-                        fill="#ef4444"
-                        radius={[4, 4, 0, 0]}
-                      />
-                    </BarChart>
-                  </ResponsiveContainer>
+                <div className="h-64 flex items-center justify-center bg-gray-50 border border-gray-200 rounded">
+                  <div className="text-center">
+                    <Heart className="h-12 w-12 mx-auto text-gray-400 mb-2" />
+                    <p className="text-gray-500">Heart rate chart will be available soon</p>
+                    <p className="text-sm text-gray-400">Visit Performance Analysis for detailed charts</p>
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -331,11 +307,20 @@ export function TrainingDashboard({ className }: TrainingDashboardProps) {
 
               {/* Session Charts */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <SessionChart session={selectedSession} metric="pace" />
-                <SessionChart session={selectedSession} metric="strokeRate" />
-                {selectedSession.data.some(d => d.heartRate && d.heartRate > 0) && (
-                  <SessionChart session={selectedSession} metric="heartRate" />
-                )}
+                <Card>
+                  <CardContent className="p-8 text-center">
+                    <Activity className="h-12 w-12 mx-auto text-gray-400 mb-2" />
+                    <p className="text-gray-500">Session charts will be available soon</p>
+                    <p className="text-sm text-gray-400">Visit Performance Analysis for detailed charts</p>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardContent className="p-8 text-center">
+                    <Activity className="h-12 w-12 mx-auto text-gray-400 mb-2" />
+                    <p className="text-gray-500">Session charts will be available soon</p>
+                    <p className="text-sm text-gray-400">Visit Performance Analysis for detailed charts</p>
+                  </CardContent>
+                </Card>
               </div>
             </div>
           )}
@@ -379,25 +364,12 @@ export function TrainingDashboard({ className }: TrainingDashboardProps) {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="h-64">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={strokeRateData}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="date" />
-                      <YAxis />
-                      <Tooltip 
-                        formatter={(value: any) => [`${value} spm`, 'Stroke Rate']}
-                        labelFormatter={(label) => `Date: ${label}`}
-                      />
-                      <Line 
-                        type="monotone" 
-                        dataKey="strokeRate" 
-                        stroke="#f59e0b" 
-                        strokeWidth={2}
-                        dot={{ fill: '#f59e0b', strokeWidth: 2, r: 4 }}
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
+                <div className="h-64 flex items-center justify-center bg-gray-50 border border-gray-200 rounded">
+                  <div className="text-center">
+                    <BarChart3 className="h-12 w-12 mx-auto text-gray-400 mb-2" />
+                    <p className="text-gray-500">Stroke rate chart will be available soon</p>
+                    <p className="text-sm text-gray-400">Visit Performance Analysis for detailed charts</p>
+                  </div>
                 </div>
               </CardContent>
             </Card>

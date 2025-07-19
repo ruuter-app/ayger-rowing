@@ -6,7 +6,7 @@ import { Badge } from '../ui/badge';
 import { ArrowUpDown, Calendar, Ruler, Clock, BarChart3, MapPin, FileDown, Activity, HeartPulse } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
 import { Button } from '../ui/button';
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend, ComposedChart, Bar } from 'recharts';
+// Charts temporarily disabled - using Chart.js in PerformanceDashboard instead
 import { MapContainer, TileLayer, Polyline, Tooltip as LeafletTooltip } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useMemo } from 'react';
