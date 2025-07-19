@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import { ComposedChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { ChartWrapper } from './ChartWrapper';
 
 interface SessionData {
   timeMinutes: number;
@@ -219,8 +220,9 @@ export function SessionDetailsChart() {
           </div>
         ) : (
           <div className="h-80">
-            <ResponsiveContainer width="100%" height="100%">
-              <ComposedChart data={displaySession.data} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+            <ChartWrapper width="100%" height="100%">
+              <ResponsiveContainer width="100%" height="100%">
+                <ComposedChart data={displaySession.data} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis 
                   dataKey="timeMinutes" 
@@ -282,6 +284,7 @@ export function SessionDetailsChart() {
                 })}
               </ComposedChart>
             </ResponsiveContainer>
+            </ChartWrapper>
           </div>
         )}
       </CardContent>

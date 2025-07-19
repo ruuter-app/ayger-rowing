@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import { ComposedChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { ChartWrapper } from './ChartWrapper';
 
 interface AggregatedData {
   period: string;
@@ -199,8 +200,9 @@ export function AggregatedMetricsChart() {
           </div>
         ) : (
           <div className="h-80">
-            <ResponsiveContainer width="100%" height="100%">
-              <ComposedChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+            <ChartWrapper width="100%" height="100%">
+              <ResponsiveContainer width="100%" height="100%">
+                <ComposedChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="period" />
                 
@@ -256,6 +258,7 @@ export function AggregatedMetricsChart() {
                 })}
               </ComposedChart>
             </ResponsiveContainer>
+            </ChartWrapper>
           </div>
         )}
       </CardContent>

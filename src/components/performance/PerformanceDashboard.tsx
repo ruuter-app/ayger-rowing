@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { AggregatedMetricsChart } from './AggregatedMetricsChart';
 import { SessionDetailsChart } from './SessionDetailsChart';
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer } from 'recharts';
+import { ChartWrapper } from './ChartWrapper';
 
 interface PerformanceDashboardProps {
   className?: string;
@@ -29,13 +30,15 @@ export function PerformanceDashboard({ className }: PerformanceDashboardProps) {
         <h3 className="text-lg font-semibold mb-4">Debug Chart (Recharts Test)</h3>
         <p className="text-sm text-gray-600 mb-2">Data: {JSON.stringify(debugData)}</p>
         <div className="h-40 bg-gray-50 border">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={debugData}>
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Line type="monotone" dataKey="value" stroke="#8884d8" strokeWidth={2} />
-            </LineChart>
-          </ResponsiveContainer>
+          <ChartWrapper width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={debugData}>
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Line type="monotone" dataKey="value" stroke="#8884d8" strokeWidth={2} />
+              </LineChart>
+            </ResponsiveContainer>
+          </ChartWrapper>
         </div>
       </div>
       
