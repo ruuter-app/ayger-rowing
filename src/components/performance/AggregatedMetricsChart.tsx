@@ -31,12 +31,15 @@ export function AggregatedMetricsChart() {
   const loadData = async () => {
     setLoading(true);
     try {
-      const response = await fetch('takatomo-training-data/training_logs.csv');
+      const basePath = import.meta.env.BASE_URL || '/';
+      const csvPath = `${basePath}takatomo-training-data/training_logs.csv`.replace('//', '/');
+      const response = await fetch(csvPath);
       const csvText = await response.text();
       const aggregatedData = processCSVData(csvText, period);
       setData(aggregatedData);
     } catch (error) {
       console.error('Error loading data:', error);
+      console.error('Failed CSV path:', csvPath);
     } finally {
       setLoading(false);
     }

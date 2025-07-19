@@ -36,7 +36,9 @@ export function SessionDetailsChart() {
   const loadSessions = async () => {
     setLoading(true);
     try {
-      const response = await fetch('takatomo-training-data/training_logs.csv');
+      const basePath = import.meta.env.BASE_URL || '/';
+      const csvPath = `${basePath}takatomo-training-data/training_logs.csv`.replace('//', '/');
+      const response = await fetch(csvPath);
       const csvText = await response.text();
       const parsedSessions = parseSessionsFromCSV(csvText);
       setSessions(parsedSessions);
@@ -45,6 +47,7 @@ export function SessionDetailsChart() {
       }
     } catch (error) {
       console.error('Error loading sessions:', error);
+      console.error('Failed CSV path:', csvPath);
     } finally {
       setLoading(false);
     }
