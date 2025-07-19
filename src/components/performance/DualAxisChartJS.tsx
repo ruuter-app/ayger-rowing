@@ -43,11 +43,13 @@ const METRICS = [
   { key: 'avgStrokeRate', label: 'Avg Stroke Rate (spm)', type: 'line', color: 'hsl(8, 85%, 65%)' }, // Ayger Coral
   { key: 'avgHeartRate', label: 'Avg Heart Rate (bpm)', type: 'line', color: 'hsl(40, 95%, 55%)' }, // Ayger Orange
   { key: 'avgPace', label: 'Avg Pace (/500m)', type: 'line', color: 'hsl(175, 80%, 40%)' }, // Ayger Teal
+  { key: 'totalDistance', label: 'Total Distance (m)', type: 'bar', color: 'hsl(120, 70%, 45%)' }, // Green
+  { key: 'sessionCount', label: 'Session Count', type: 'bar', color: 'hsl(280, 70%, 60%)' }, // Purple
 ];
 
 export function DualAxisChartJS() {
   const [data, setData] = useState<AggregatedData[]>([]);
-  const [selectedMetrics, setSelectedMetrics] = useState<string[]>(['avgStrokeRate', 'avgHeartRate']);
+  const [selectedMetrics, setSelectedMetrics] = useState<string[]>(['totalDistance', 'sessionCount']);
   const [period, setPeriod] = useState<'week' | 'month'>('week');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -175,10 +177,8 @@ export function DualAxisChartJS() {
 
   const handleMetricToggle = (metricKey: string) => {
     if (selectedMetrics.includes(metricKey)) {
-      if (selectedMetrics.length > 1) {
-        setSelectedMetrics(prev => prev.filter(m => m !== metricKey));
-      }
-    } else if (selectedMetrics.length < 2) {
+      setSelectedMetrics(prev => prev.filter(m => m !== metricKey));
+    } else if (selectedMetrics.length < 2) { // Changed from 4 to 2
       setSelectedMetrics(prev => [...prev, metricKey]);
     }
   };
@@ -187,11 +187,11 @@ export function DualAxisChartJS() {
 
   // Test data for debugging
   const testData = [
-    { period: '2024-01', sessionCount: 5, totalDistance: 1500, avgStrokeRate: 22, avgHeartRate: 140, avgPace: 125 },
-    { period: '2024-02', sessionCount: 8, totalDistance: 2200, avgStrokeRate: 24, avgHeartRate: 145, avgPace: 118 },
-    { period: '2024-03', sessionCount: 6, totalDistance: 1800, avgStrokeRate: 23, avgHeartRate: 142, avgPace: 122 },
-    { period: '2024-04', sessionCount: 10, totalDistance: 2800, avgStrokeRate: 25, avgHeartRate: 148, avgPace: 115 },
-    { period: '2024-05', sessionCount: 7, totalDistance: 2100, avgStrokeRate: 24, avgHeartRate: 144, avgPace: 120 },
+    { period: '2024-01', sessionCount: 5, totalDistance: 1500, avgStrokeRate: 22, avgHeartRate: 140, avgPace: 150 }, // 2:30
+    { period: '2024-02', sessionCount: 8, totalDistance: 2200, avgStrokeRate: 24, avgHeartRate: 145, avgPace: 145 }, // 2:25
+    { period: '2024-03', sessionCount: 6, totalDistance: 1800, avgStrokeRate: 23, avgHeartRate: 142, avgPace: 148 }, // 2:28
+    { period: '2024-04', sessionCount: 10, totalDistance: 2800, avgStrokeRate: 25, avgHeartRate: 148, avgPace: 142 }, // 2:22
+    { period: '2024-05', sessionCount: 7, totalDistance: 2100, avgStrokeRate: 24, avgHeartRate: 144, avgPace: 147 }, // 2:27
   ];
 
   // Use test data if no real data is available
@@ -207,30 +207,46 @@ export function DualAxisChartJS() {
     );
   }
 
-  // Prepare datasets for Chart.js - all line charts
+  // Prepare datasets for Chart.js - mixed line and bar charts
   const datasets: any[] = [];
 
   selectedMetrics.forEach((metricKey, index) => {
     const metric = getMetric(metricKey);
     if (!metric) return;
 
-    datasets.push({
+    // Determine chart type and axis assignment
+    const isBarChart = metricKey === 'totalDistance' || metricKey === 'sessionCount';
+    const chartType = isBarChart ? 'bar' : 'line';
+    
+    // Assign axes: first metric on left (y), second metric on right (y1)
+    const yAxisID = index === 0 ? 'y' : 'y1';
+
+    const dataset: any = {
       label: metric.label,
       data: chartData.map(item => item[metricKey as keyof AggregatedData] as number),
       borderColor: metric.color,
       backgroundColor: metric.color.replace(')', ', 0.2)').replace('hsl(', 'hsla('),
       borderWidth: 3,
-      type: 'line',
-      tension: 0.2,
-      fill: false,
-      pointBackgroundColor: metric.color,
-      pointBorderColor: metric.color,
-      pointBorderWidth: 2,
-      pointRadius: 4,
-      pointHoverRadius: 6,
-      pointHoverBorderWidth: 3,
-      yAxisID: index === 0 ? 'y' : 'y1', // First metric on left axis, second on right
-    });
+      type: chartType,
+      yAxisID: yAxisID,
+    };
+
+    // Add line-specific properties
+    if (chartType === 'line') {
+      dataset.tension = 0.2;
+      dataset.fill = false;
+      dataset.pointRadius = 0; // Remove point markers
+      dataset.pointHoverRadius = 6; // Keep hover points for better UX
+      dataset.pointHoverBorderWidth = 3;
+    }
+
+    // Add bar-specific properties
+    if (chartType === 'bar') {
+      dataset.borderRadius = 4;
+      dataset.borderSkipped = false;
+    }
+
+    datasets.push(dataset);
   });
 
   const chartConfig = {
@@ -238,6 +254,7 @@ export function DualAxisChartJS() {
     datasets,
   };
 
+  // Get metrics for each axis
   const leftMetric = getMetric(selectedMetrics[0]);
   const rightMetric = getMetric(selectedMetrics[1]);
 
@@ -268,6 +285,33 @@ export function DualAxisChartJS() {
         },
         color: 'hsl(215, 25%, 27%)', // Ayger Navy
       },
+      tooltip: {
+        callbacks: {
+          label: function(context: any) {
+            const label = context.dataset.label || '';
+            const value = context.parsed.y;
+            
+            // Format pace as MM:SS
+            if (context.dataset.label?.includes('Pace')) {
+              const minutes = Math.floor(value / 60);
+              const seconds = Math.floor(value % 60);
+              return `${label}: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+            }
+            
+            // Format distance with units
+            if (context.dataset.label?.includes('Distance')) {
+              return `${label}: ${value.toLocaleString()}m`;
+            }
+            
+            // Format session count
+            if (context.dataset.label?.includes('Session Count')) {
+              return `${label}: ${value} sessions`;
+            }
+            
+            return `${label}: ${value}`;
+          }
+        }
+      }
     },
     scales: {
       x: {
@@ -280,7 +324,7 @@ export function DualAxisChartJS() {
       },
       y: {
         type: 'linear' as const,
-        display: true,
+        display: selectedMetrics.length > 0,
         position: 'left' as const,
         beginAtZero: true,
         title: {
@@ -296,6 +340,19 @@ export function DualAxisChartJS() {
         },
         ticks: {
           color: 'hsl(215, 25%, 27%)', // Ayger Navy
+          callback: function(value: any) {
+            // Format pace as MM:SS
+            if (leftMetric?.key === 'avgPace') {
+              const minutes = Math.floor(value / 60);
+              const seconds = Math.floor(value % 60);
+              return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            }
+            // Format distance with units
+            if (leftMetric?.key === 'totalDistance') {
+              return value.toLocaleString();
+            }
+            return value;
+          }
         },
       },
       y1: {
@@ -316,6 +373,19 @@ export function DualAxisChartJS() {
         },
         ticks: {
           color: 'hsl(215, 25%, 27%)', // Ayger Navy
+          callback: function(value: any) {
+            // Format pace as MM:SS
+            if (rightMetric?.key === 'avgPace') {
+              const minutes = Math.floor(value / 60);
+              const seconds = Math.floor(value % 60);
+              return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            }
+            // Format distance with units
+            if (rightMetric?.key === 'totalDistance') {
+              return value.toLocaleString();
+            }
+            return value;
+          }
         },
       },
     },
@@ -341,14 +411,14 @@ export function DualAxisChartJS() {
           </div>
           
           <div className="flex gap-2 items-center">
-            <span className="text-sm text-muted-foreground">Metrics (select exactly 2):</span>
+            <span className="text-sm text-muted-foreground">Metrics (select up to 2):</span>
             {METRICS.map(metric => (
               <Button
                 key={metric.key}
                 variant={selectedMetrics.includes(metric.key) ? "default" : "outline"}
                 size="sm"
                 onClick={() => handleMetricToggle(metric.key)}
-                disabled={!selectedMetrics.includes(metric.key) && selectedMetrics.length >= 2}
+                disabled={!selectedMetrics.includes(metric.key) && selectedMetrics.length >= 2} // Changed from 4 to 2
               >
                 {metric.label}
               </Button>

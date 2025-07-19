@@ -66,6 +66,7 @@ export function SessionDetailsChartJS() {
   const [selectedSession, setSelectedSession] = useState<Session | null>(null);
   const [selectedMetrics, setSelectedMetrics] = useState<string[]>(['pace', 'strokeRate', 'heartRate']);
   const [loading, setLoading] = useState(true);
+  const [xAxisType, setXAxisType] = useState<'time' | 'distance'>('time');
 
   useEffect(() => {
     loadSessions();
@@ -289,18 +290,17 @@ export function SessionDetailsChartJS() {
       type: 'line',
       tension: 0.2,
       fill: false,
-      pointBackgroundColor: metric.color,
-      pointBorderColor: metric.color,
-      pointBorderWidth: 2,
-      pointRadius: 4,
-      pointHoverRadius: 6,
+      pointRadius: 0, // Remove point markers
+      pointHoverRadius: 6, // Keep hover points for better UX
       pointHoverBorderWidth: 3,
       yAxisID: yAxisID,
     });
   });
 
   const chartConfig = {
-    labels: displaySession.data.map(item => item.timeMinutes), // Use time on x-axis
+    labels: displaySession.data.map(item => 
+      xAxisType === 'time' ? item.timeMinutes : item.distance
+    ),
     datasets,
   };
 
@@ -337,12 +337,34 @@ export function SessionDetailsChartJS() {
         },
         color: 'hsl(215, 25%, 27%)', // Ayger Navy
       },
+      tooltip: {
+        callbacks: {
+          label: function(context: any) {
+            const label = context.dataset.label || '';
+            const value = context.parsed.y;
+            
+            // Format pace as MM:SS
+            if (context.dataset.label?.includes('Pace')) {
+              const minutes = Math.floor(value / 60);
+              const seconds = Math.floor(value % 60);
+              return `${label}: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+            }
+            
+            // Format distance with units
+            if (context.dataset.label?.includes('Distance')) {
+              return `${label}: ${value.toLocaleString()}m`;
+            }
+            
+            return `${label}: ${value}`;
+          }
+        }
+      }
     },
     scales: {
       x: {
         title: {
           display: true,
-          text: 'Time',
+          text: xAxisType === 'time' ? 'Time' : 'Distance',
           color: 'hsl(215, 25%, 27%)', // Ayger Navy
           font: {
             weight: '500',
@@ -354,10 +376,15 @@ export function SessionDetailsChartJS() {
         ticks: {
           color: 'hsl(215, 25%, 27%)', // Ayger Navy
           callback: function(value: any, index: any) {
-            const minutes = displaySession.data[index]?.timeMinutes || 0;
-            const hours = Math.floor(minutes / 60);
-            const mins = minutes % 60;
-            return `${hours}:${mins.toString().padStart(2, '0')}`;
+            if (xAxisType === 'time') {
+              const minutes = displaySession.data[index]?.timeMinutes || 0;
+              const hours = Math.floor(minutes / 60);
+              const mins = minutes % 60;
+              return `${hours}:${mins.toString().padStart(2, '0')}`;
+            } else {
+              const distance = displaySession.data[index]?.distance || 0;
+              return distance >= 1000 ? `${(distance / 1000).toFixed(1)}km` : `${Math.round(distance)}m`;
+            }
           }
         },
       },
@@ -501,6 +528,24 @@ export function SessionDetailsChartJS() {
                   ))}
                 </SelectContent>
               </Select>
+            </div>
+            
+            <div className="flex gap-2 items-center">
+              <span className="text-sm text-muted-foreground">X-Axis:</span>
+              <Button
+                variant={xAxisType === 'time' ? "default" : "outline"}
+                size="sm"
+                onClick={() => setXAxisType('time')}
+              >
+                Time
+              </Button>
+              <Button
+                variant={xAxisType === 'distance' ? "default" : "outline"}
+                size="sm"
+                onClick={() => setXAxisType('distance')}
+              >
+                Distance
+              </Button>
             </div>
             
             <div className="flex gap-2 items-center">
