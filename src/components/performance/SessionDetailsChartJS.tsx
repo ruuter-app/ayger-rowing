@@ -45,9 +45,9 @@ interface Session {
 }
 
 const METRICS = [
-  { key: 'distance', label: 'Distance (m)', type: 'bar', color: 'rgb(5, 150, 105)' },
-  { key: 'strokeRate', label: 'Stroke Rate', type: 'line', color: 'rgb(220, 38, 38)' },
-  { key: 'heartRate', label: 'Heart Rate', type: 'line', color: 'rgb(245, 158, 11)' },
+  { key: 'distance', label: 'Distance (m)', type: 'bar', color: 'hsl(175, 80%, 40%)' }, // Ayger Teal
+  { key: 'strokeRate', label: 'Stroke Rate', type: 'line', color: 'hsl(8, 85%, 65%)' }, // Ayger Coral
+  { key: 'heartRate', label: 'Heart Rate', type: 'line', color: 'hsl(40, 95%, 55%)' }, // Ayger Orange
 ];
 
 export function SessionDetailsChartJS() {
@@ -212,8 +212,8 @@ export function SessionDetailsChartJS() {
       label: metric.label,
       data: displaySession.data.map(item => item[metricKey as keyof SessionData] as number),
       borderColor: metric.color,
-      backgroundColor: metric.type === 'bar' ? metric.color + '80' : metric.color + '20',
-      borderWidth: 2,
+      backgroundColor: metric.type === 'bar' ? metric.color.replace(')', ', 0.8)').replace('hsl(', 'hsla(') : metric.color.replace(')', ', 0.2)').replace('hsl(', 'hsla('),
+      borderWidth: 3,
       yAxisID: index === 0 ? 'y' : 'y1', // First metric on left axis, second on right
     };
 
@@ -222,13 +222,20 @@ export function SessionDetailsChartJS() {
       return {
         ...baseConfig,
         type: 'line',
-        tension: 0.1,
+        tension: 0.2,
         fill: false,
+        pointBackgroundColor: metric.color,
+        pointBorderColor: metric.color,
+        pointBorderWidth: 2,
+        pointRadius: 4,
+        pointHoverRadius: 6,
+        pointHoverBorderWidth: 3,
       };
     } else {
       return {
         ...baseConfig,
         type: 'bar',
+        borderRadius: 4,
       };
     }
   }).filter(Boolean);
@@ -250,10 +257,23 @@ export function SessionDetailsChartJS() {
     plugins: {
       legend: {
         position: 'top' as const,
+        labels: {
+          usePointStyle: true,
+          padding: 20,
+          font: {
+            size: 12,
+            weight: '500',
+          },
+        },
       },
       title: {
         display: true,
         text: `Session: ${displaySession.filename}`,
+        font: {
+          size: 16,
+          weight: '600',
+        },
+        color: 'hsl(215, 25%, 27%)', // Ayger Navy
       },
     },
     scales: {
@@ -261,9 +281,16 @@ export function SessionDetailsChartJS() {
         title: {
           display: true,
           text: 'Time (minutes)',
+          color: 'hsl(215, 25%, 27%)', // Ayger Navy
+          font: {
+            weight: '500',
+          },
         },
         grid: {
-          color: 'rgba(0, 0, 0, 0.1)',
+          color: 'hsla(215, 25%, 27%, 0.1)', // Ayger Navy with transparency
+        },
+        ticks: {
+          color: 'hsl(215, 25%, 27%)', // Ayger Navy
         },
       },
       y: {
@@ -274,9 +301,16 @@ export function SessionDetailsChartJS() {
         title: {
           display: true,
           text: leftMetric?.label || '',
+          color: 'hsl(215, 25%, 27%)', // Ayger Navy
+          font: {
+            weight: '500',
+          },
         },
         grid: {
-          color: 'rgba(0, 0, 0, 0.1)',
+          color: 'hsla(215, 25%, 27%, 0.1)', // Ayger Navy with transparency
+        },
+        ticks: {
+          color: 'hsl(215, 25%, 27%)', // Ayger Navy
         },
       },
       y1: {
@@ -287,9 +321,16 @@ export function SessionDetailsChartJS() {
         title: {
           display: true,
           text: rightMetric?.label || '',
+          color: 'hsl(215, 25%, 27%)', // Ayger Navy
+          font: {
+            weight: '500',
+          },
         },
         grid: {
           drawOnChartArea: false,
+        },
+        ticks: {
+          color: 'hsl(215, 25%, 27%)', // Ayger Navy
         },
       },
     },

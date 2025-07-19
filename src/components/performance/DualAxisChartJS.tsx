@@ -39,10 +39,10 @@ interface AggregatedData {
 }
 
 const METRICS = [
-  { key: 'sessionCount', label: 'Session Count', type: 'bar', color: 'rgb(37, 99, 235)' },
-  { key: 'totalDistance', label: 'Total Distance (m)', type: 'bar', color: 'rgb(5, 150, 105)' },
-  { key: 'avgStrokeRate', label: 'Avg Stroke Rate', type: 'line', color: 'rgb(220, 38, 38)' },
-  { key: 'avgHeartRate', label: 'Avg Heart Rate', type: 'line', color: 'rgb(245, 158, 11)' },
+  { key: 'sessionCount', label: 'Session Count', type: 'bar', color: 'hsl(175, 80%, 40%)' }, // Ayger Teal
+  { key: 'totalDistance', label: 'Total Distance (m)', type: 'bar', color: 'hsl(40, 95%, 55%)' }, // Ayger Orange
+  { key: 'avgStrokeRate', label: 'Avg Stroke Rate', type: 'line', color: 'hsl(8, 85%, 65%)' }, // Ayger Coral
+  { key: 'avgHeartRate', label: 'Avg Heart Rate', type: 'line', color: 'hsl(215, 25%, 27%)' }, // Ayger Navy
 ];
 
 export function DualAxisChartJS() {
@@ -206,8 +206,8 @@ export function DualAxisChartJS() {
       label: metric.label,
       data: chartData.map(item => item[metricKey as keyof AggregatedData] as number),
       borderColor: metric.color,
-      backgroundColor: metric.type === 'bar' ? metric.color + '80' : metric.color + '20',
-      borderWidth: 2,
+      backgroundColor: metric.type === 'bar' ? metric.color.replace(')', ', 0.8)').replace('hsl(', 'hsla(') : metric.color.replace(')', ', 0.2)').replace('hsl(', 'hsla('),
+      borderWidth: 3,
       yAxisID: index === 0 ? 'y' : 'y1', // First metric on left axis, second on right
     };
 
@@ -216,13 +216,20 @@ export function DualAxisChartJS() {
       return {
         ...baseConfig,
         type: 'line',
-        tension: 0.1,
+        tension: 0.2,
         fill: false,
+        pointBackgroundColor: metric.color,
+        pointBorderColor: metric.color,
+        pointBorderWidth: 2,
+        pointRadius: 4,
+        pointHoverRadius: 6,
+        pointHoverBorderWidth: 3,
       };
     } else {
       return {
         ...baseConfig,
         type: 'bar',
+        borderRadius: 4,
       };
     }
   }).filter(Boolean);
@@ -244,16 +251,32 @@ export function DualAxisChartJS() {
     plugins: {
       legend: {
         position: 'top' as const,
+        labels: {
+          usePointStyle: true,
+          padding: 20,
+          font: {
+            size: 12,
+            weight: '500',
+          },
+        },
       },
       title: {
         display: true,
-                 text: 'Aggregated Training Metrics',
+        text: 'Aggregated Training Metrics',
+        font: {
+          size: 16,
+          weight: '600',
+        },
+        color: 'hsl(215, 25%, 27%)', // Ayger Navy
       },
     },
     scales: {
       x: {
         grid: {
-          color: 'rgba(0, 0, 0, 0.1)',
+          color: 'hsla(215, 25%, 27%, 0.1)', // Ayger Navy with transparency
+        },
+        ticks: {
+          color: 'hsl(215, 25%, 27%)', // Ayger Navy
         },
       },
       y: {
@@ -264,9 +287,16 @@ export function DualAxisChartJS() {
         title: {
           display: true,
           text: leftMetric?.label || '',
+          color: 'hsl(215, 25%, 27%)', // Ayger Navy
+          font: {
+            weight: '500',
+          },
         },
         grid: {
-          color: 'rgba(0, 0, 0, 0.1)',
+          color: 'hsla(215, 25%, 27%, 0.1)', // Ayger Navy with transparency
+        },
+        ticks: {
+          color: 'hsl(215, 25%, 27%)', // Ayger Navy
         },
       },
       y1: {
@@ -277,9 +307,16 @@ export function DualAxisChartJS() {
         title: {
           display: true,
           text: rightMetric?.label || '',
+          color: 'hsl(215, 25%, 27%)', // Ayger Navy
+          font: {
+            weight: '500',
+          },
         },
         grid: {
           drawOnChartArea: false,
+        },
+        ticks: {
+          color: 'hsl(215, 25%, 27%)', // Ayger Navy
         },
       },
     },
