@@ -204,41 +204,52 @@ export function SessionDetailsChartJS() {
   }
 
   // Prepare datasets for Chart.js with dual axes
-  const datasets = selectedMetrics.map((metricKey, index) => {
-    const metric = getMetric(metricKey);
-    if (!metric) return null;
+  // Sort to ensure line charts are rendered after bar charts (on top)
+  const datasets = selectedMetrics
+    .map((metricKey, index) => {
+      const metric = getMetric(metricKey);
+      if (!metric) return null;
 
-    const baseConfig = {
-      label: metric.label,
-      data: displaySession.data.map(item => item[metricKey as keyof SessionData] as number),
-      borderColor: metric.color,
-      backgroundColor: metric.type === 'bar' ? metric.color.replace(')', ', 0.8)').replace('hsl(', 'hsla(') : metric.color.replace(')', ', 0.2)').replace('hsl(', 'hsla('),
-      borderWidth: 3,
-      yAxisID: index === 0 ? 'y' : 'y1', // First metric on left axis, second on right
-    };
+      const baseConfig = {
+        label: metric.label,
+        data: displaySession.data.map(item => item[metricKey as keyof SessionData] as number),
+        borderColor: metric.color,
+        backgroundColor: metric.type === 'bar' ? metric.color.replace(')', ', 0.8)').replace('hsl(', 'hsla(') : metric.color.replace(')', ', 0.2)').replace('hsl(', 'hsla('),
+        borderWidth: 3,
+        yAxisID: index === 0 ? 'y' : 'y1', // First metric on left axis, second on right
+      };
 
-    // Add type-specific configurations
-    if (metric.type === 'line') {
-      return {
-        ...baseConfig,
-        type: 'line',
-        tension: 0.2,
-        fill: false,
-        pointBackgroundColor: metric.color,
-        pointBorderColor: metric.color,
-        pointBorderWidth: 2,
-        pointRadius: 4,
-        pointHoverRadius: 6,
-        pointHoverBorderWidth: 3,
-      };
-    } else {
-      return {
-        ...baseConfig,
-        type: 'bar',
-        borderRadius: 4,
-      };
-    }
-  }).filter(Boolean);
+      // Add type-specific configurations
+      if (metric.type === 'line') {
+        return {
+          ...baseConfig,
+          type: 'line',
+          tension: 0.2,
+          fill: false,
+          pointBackgroundColor: metric.color,
+          pointBorderColor: metric.color,
+          pointBorderWidth: 2,
+          pointRadius: 4,
+          pointHoverRadius: 6,
+          pointHoverBorderWidth: 3,
+        };
+      } else {
+        return {
+          ...baseConfig,
+          type: 'bar',
+          borderRadius: 4,
+        };
+      }
+    })
+    .filter(Boolean)
+    .sort((a, b) => {
+      // Sort bar charts first, then line charts (so lines appear on top)
+      const aIsBar = a?.type === 'bar';
+      const bIsBar = b?.type === 'bar';
+      if (aIsBar && !bIsBar) return -1; // Bar comes first
+      if (!aIsBar && bIsBar) return 1;  // Line comes second (on top)
+      return 0; // Same type, maintain order
+    });
 
   const chartConfig = {
     labels: displaySession.data.map(item => item.timeMinutes),
