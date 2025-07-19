@@ -14,6 +14,7 @@ import { Chart } from 'react-chartjs-2';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 
+// Register all required controllers and elements
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -45,6 +46,7 @@ export function DualAxisChartJS() {
   const [selectedMetrics, setSelectedMetrics] = useState<string[]>(['sessionCount', 'avgStrokeRate']);
   const [period, setPeriod] = useState<'week' | 'month'>('week');
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     loadData();
@@ -52,15 +54,27 @@ export function DualAxisChartJS() {
 
   const loadData = async () => {
     setLoading(true);
+    setError(null);
     try {
+      // Handle base path for GitHub Pages
       const basePath = import.meta.env.BASE_URL || '/';
-      const csvPath = `${basePath}takatomo-training-data/training_logs.csv`.replace('//', '/');
+      let csvPath = `${basePath}takatomo-training-data/training_logs.csv`;
+      
+      // Clean up the path to avoid double slashes
+      csvPath = csvPath.replace(/\/+/g, '/');
+      
       const response = await fetch(csvPath);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
       const csvText = await response.text();
       const aggregatedData = processCSVData(csvText, period);
       setData(aggregatedData);
     } catch (error) {
       console.error('Error loading data:', error);
+      setError(error instanceof Error ? error.message : 'Unknown error');
     } finally {
       setLoading(false);
     }
@@ -184,16 +198,29 @@ export function DualAxisChartJS() {
     const metric = getMetric(metricKey);
     if (!metric) return null;
 
-    return {
+    const baseConfig = {
       label: metric.label,
       data: chartData.map(item => item[metricKey as keyof AggregatedData] as number),
       borderColor: metric.color,
       backgroundColor: metric.type === 'bar' ? metric.color + '80' : metric.color + '20',
       borderWidth: 2,
-      tension: 0.1,
-      type: metric.type,
       yAxisID: index === 0 ? 'y' : 'y1', // First metric on left axis, second on right
     };
+
+    // Add type-specific configurations
+    if (metric.type === 'line') {
+      return {
+        ...baseConfig,
+        type: 'line',
+        tension: 0.1,
+        fill: false,
+      };
+    } else {
+      return {
+        ...baseConfig,
+        type: 'bar',
+      };
+    }
   }).filter(Boolean);
 
   const chartConfig = {
@@ -291,6 +318,11 @@ export function DualAxisChartJS() {
       </CardHeader>
       
       <CardContent>
+        {error && (
+          <div className="text-center py-8 text-red-500">
+            Error loading data: {error}
+          </div>
+        )}
         {chartData.length === 0 ? (
           <div className="text-center py-8 text-muted-foreground">
             No data available for the selected period
@@ -303,4 +335,4 @@ export function DualAxisChartJS() {
       </CardContent>
     </Card>
   );
-} 
+}

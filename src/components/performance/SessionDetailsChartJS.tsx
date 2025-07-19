@@ -15,6 +15,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 
+// Register all required controllers and elements
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -58,11 +59,21 @@ export function SessionDetailsChartJS() {
   const loadSessions = async () => {
     setLoading(true);
     try {
+      // Handle base path for GitHub Pages
       const basePath = import.meta.env.BASE_URL || '/';
-      const csvPath = `${basePath}takatomo-training-data/training_logs.csv`.replace('//', '/');
+      let csvPath = `${basePath}takatomo-training-data/training_logs.csv`;
+      
+      // Clean up the path to avoid double slashes
+      csvPath = csvPath.replace(/\/+/g, '/');
+      
       const response = await fetch(csvPath);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
       const csvText = await response.text();
       const parsedSessions = parseSessionsFromCSV(csvText);
+      
       setSessions(parsedSessions);
       if (parsedSessions.length > 0) {
         setSelectedSession(parsedSessions[0]); // Select the first session by default
@@ -193,16 +204,29 @@ export function SessionDetailsChartJS() {
     const metric = getMetric(metricKey);
     if (!metric) return null;
 
-    return {
+    const baseConfig = {
       label: metric.label,
       data: displaySession.data.map(item => item[metricKey as keyof SessionData] as number),
       borderColor: metric.color,
       backgroundColor: metric.type === 'bar' ? metric.color + '80' : metric.color + '20',
       borderWidth: 2,
-      tension: 0.1,
-      type: metric.type,
       yAxisID: index === 0 ? 'y' : 'y1', // First metric on left axis, second on right
     };
+
+    // Add type-specific configurations
+    if (metric.type === 'line') {
+      return {
+        ...baseConfig,
+        type: 'line',
+        tension: 0.1,
+        fill: false,
+      };
+    } else {
+      return {
+        ...baseConfig,
+        type: 'bar',
+      };
+    }
   }).filter(Boolean);
 
   const chartConfig = {
