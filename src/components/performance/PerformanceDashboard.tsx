@@ -1,5 +1,6 @@
 import React from 'react';
-import { SessionHistory, AggregatedTrendsDashboard } from '../athlete/SessionHistory';
+import { AggregatedMetricsChart } from './AggregatedMetricsChart';
+import { SessionDetailsChart } from './SessionDetailsChart';
 
 interface PerformanceDashboardProps {
   className?: string;
@@ -7,12 +8,12 @@ interface PerformanceDashboardProps {
 
 export function PerformanceDashboard({ className }: PerformanceDashboardProps) {
   return (
-    <div className={className}>
-      {/* Aggregated trends over time - shown first */}
-      <AggregatedTrendsDashboard />
+    <div className={`space-y-8 ${className}`}>
+      {/* Aggregated Metrics Chart */}
+      <AggregatedMetricsChart />
       
-      {/* Session History with clickable details - shown second */}
-      <SessionHistory />
+      {/* Session Details Chart */}
+      <SessionDetailsChart />
     </div>
   );
 } 
