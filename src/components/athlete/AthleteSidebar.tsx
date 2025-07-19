@@ -22,18 +22,6 @@ const athleteNavItems = [
     icon: TrendingUp, 
     label: 'Performance Analysis', 
     description: 'Data insights and trends' 
-  },
-  { 
-    to: '/athlete/training-data', 
-    icon: Activity, 
-    label: 'Training Data', 
-    description: 'Session analysis' 
-  },
-  { 
-    to: '/athlete/sessions', 
-    icon: Calendar, 
-    label: 'Session History', 
-    description: 'View past sessions' 
   }
 ];
 

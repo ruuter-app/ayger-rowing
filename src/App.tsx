@@ -4,7 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { HashRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./components/auth/AuthContext";
-import { TrainingDataPage } from "./pages/TrainingDataPage";
+
 import { PerformancePage } from "./pages/PerformancePage";
 import { CoachDashboard } from "./pages/CoachDashboard";
 import NotFound from "./pages/NotFound";
@@ -26,7 +26,7 @@ const App = () => {
             <Routes>
               <Route path="/" element={<PerformancePage />} />
               <Route path="/login" element={<LoginForm />} />
-              <Route path="/athlete/training-data" element={<TrainingDataPage />} />
+
               <Route path="/athlete/performance" element={<PerformancePage />} />
               {/* <Route path="/athlete/upload" element={<UploadPage />} /> */}
               <Route path="/coach/dashboard" element={<CoachDashboard />} />
