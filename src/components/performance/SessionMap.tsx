@@ -4,12 +4,12 @@ import { MapPin } from 'lucide-react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-// Fix for default markers in Leaflet
+// Fix for default markers in Leaflet - use local assets instead of CDN
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
-  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
-  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
-  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+  iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+  iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
 });
 
 interface SessionMapProps {
@@ -32,57 +32,84 @@ export function SessionMap({ sessionData, className }: SessionMapProps) {
   useEffect(() => {
     console.log('SessionMap useEffect triggered:', { sessionData, mapRef: !!mapRef.current });
     
-    if (!mapRef.current || !sessionData) {
-      console.log('SessionMap: Missing mapRef or sessionData');
+    if (!sessionData) {
+      console.log('SessionMap: Missing sessionData');
       return;
     }
-
-    // Clean up previous map instance
-    if (mapInstanceRef.current) {
-      console.log('SessionMap: Removing previous map instance');
-      mapInstanceRef.current.remove();
-    }
-
-    // Filter out invalid coordinates
-    const validCoordinates = sessionData?.rawData
-      ?.filter(point => {
-        const lat = parseFloat(point.latitude);
-        const lng = parseFloat(point.longitude);
-        return !isNaN(lat) && !isNaN(lng) && lat !== 0 && lng !== 0;
-      })
-      .map(point => ({
-        lat: parseFloat(point.latitude),
-        lng: parseFloat(point.longitude),
-        distance: point.distance,
-        heartRate: point.heartrate,
-        strokeRate: point.strokerate
-      })) || [];
-
-    console.log('SessionMap: Valid coordinates found:', validCoordinates.length);
-
-    if (validCoordinates.length === 0) {
-      console.log('SessionMap: No valid coordinates found');
-      // Show placeholder if no valid coordinates
-      return;
-    }
-
-    // Calculate bounds
-    const bounds = L.latLngBounds(validCoordinates.map(coord => [coord.lat, coord.lng]));
-
-    console.log('SessionMap: Creating map instance');
     
-    // Create map instance
-    const map = L.map(mapRef.current, {
-      zoomControl: true,
-      scrollWheelZoom: false,
-      doubleClickZoom: false,
-      boxZoom: false,
-      keyboard: false,
-      dragging: true,
-      touchZoom: true
+    // Use requestAnimationFrame to ensure DOM is ready
+    const frameId = requestAnimationFrame(() => {
+      if (!mapRef.current) {
+        console.log('SessionMap: mapRef not available, retrying...');
+        // Retry after a short delay
+        setTimeout(() => {
+          if (!mapRef.current) {
+            console.log('SessionMap: mapRef still not available after retry');
+            return;
+          }
+          console.log('SessionMap: mapRef is ready after retry, proceeding with map creation');
+          createMap();
+        }, 100);
+        return;
+      }
+      
+      console.log('SessionMap: mapRef is ready, proceeding with map creation');
+      createMap();
     });
     
-    console.log('SessionMap: Map instance created successfully');
+    const createMap = () => {
+      // Check if Leaflet is available
+      if (typeof L === 'undefined') {
+        console.error('SessionMap: Leaflet is not available');
+        return;
+      }
+      
+      // Clean up previous map instance
+      if (mapInstanceRef.current) {
+        console.log('SessionMap: Removing previous map instance');
+        mapInstanceRef.current.remove();
+      }
+
+      // Filter out invalid coordinates
+      const validCoordinates = sessionData?.rawData
+        ?.filter(point => {
+          const lat = parseFloat(point.latitude);
+          const lng = parseFloat(point.longitude);
+          return !isNaN(lat) && !isNaN(lng) && lat !== 0 && lng !== 0;
+        })
+        .map(point => ({
+          lat: parseFloat(point.latitude),
+          lng: parseFloat(point.longitude),
+          distance: point.distance,
+          heartRate: point.heartrate,
+          strokeRate: point.strokerate
+        })) || [];
+
+      console.log('SessionMap: Valid coordinates found:', validCoordinates.length);
+
+      if (validCoordinates.length === 0) {
+        console.log('SessionMap: No valid coordinates found');
+        // Show placeholder if no valid coordinates
+        return;
+      }
+
+      // Calculate bounds
+      const bounds = L.latLngBounds(validCoordinates.map(coord => [coord.lat, coord.lng]));
+
+      console.log('SessionMap: Creating map instance');
+      
+      // Create map instance
+      const map = L.map(mapRef.current, {
+        zoomControl: true,
+        scrollWheelZoom: false,
+        doubleClickZoom: false,
+        boxZoom: false,
+        keyboard: false,
+        dragging: true,
+        touchZoom: true
+      });
+      
+      console.log('SessionMap: Map instance created successfully');
 
     // Add OpenStreetMap tiles
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -161,10 +188,12 @@ export function SessionMap({ sessionData, className }: SessionMapProps) {
       `);
     }
 
-    mapInstanceRef.current = map;
+      mapInstanceRef.current = map;
+    };
 
     // Cleanup function
     return () => {
+      cancelAnimationFrame(frameId);
       if (mapInstanceRef.current) {
         mapInstanceRef.current.remove();
         mapInstanceRef.current = null;
@@ -234,7 +263,12 @@ export function SessionMap({ sessionData, className }: SessionMapProps) {
         <div 
           ref={mapRef} 
           className="h-64 w-full rounded-lg border"
-          style={{ zIndex: 1 }}
+          style={{ 
+            zIndex: 1,
+            minHeight: '256px',
+            position: 'relative',
+            display: 'block'
+          }}
         />
         <div className="mt-3 flex items-center justify-center gap-4 text-xs text-muted-foreground">
           <div className="flex items-center gap-1">

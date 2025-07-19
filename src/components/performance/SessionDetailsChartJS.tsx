@@ -91,15 +91,20 @@ export function SessionDetailsChartJS() {
       const parsedSessions = parseSessionsFromCSV(csvText);
       console.log('Parsed sessions:', parsedSessions.length);
       
-      // Log GPS data for the first session
-      if (parsedSessions.length > 0) {
-        const firstSession = parsedSessions[0];
-        console.log('First session GPS data:', {
-          filename: firstSession.filename,
-          rawDataLength: firstSession.rawData?.length,
-          hasGPS: firstSession.rawData?.some(point => point.longitude && point.latitude)
+      // Log GPS data for all sessions
+      console.log('All sessions GPS data:');
+      parsedSessions.forEach((session, index) => {
+        const hasGPS = session.rawData?.some(point => point.longitude && point.latitude);
+        console.log(`Session ${index + 1}:`, {
+          filename: session.filename,
+          rawDataLength: session.rawData?.length,
+          hasGPS,
+          sampleGPS: hasGPS ? {
+            longitude: session.rawData?.[0]?.longitude,
+            latitude: session.rawData?.[0]?.latitude
+          } : null
         });
-      }
+      });
       
       setSessions(parsedSessions);
       if (parsedSessions.length > 0) {
@@ -459,6 +464,12 @@ export function SessionDetailsChartJS() {
                 value={selectedSession?.filename || ''} 
                 onValueChange={(filename) => {
                   const session = sessions.find(s => s.filename === filename);
+                  console.log('Session selected:', {
+                    filename,
+                    sessionFound: !!session,
+                    hasGPS: session?.rawData?.some(point => point.longitude && point.latitude),
+                    rawDataLength: session?.rawData?.length
+                  });
                   setSelectedSession(session || null);
                 }}
               >
