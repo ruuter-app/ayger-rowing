@@ -158,7 +158,7 @@ export const mockAuth = {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         const user = mockUsers.find(u => u.email === email);
-        if (user && password === 'password') {
+        if (user && password === 'Ayger2024!') {
           currentUser = user;
           resolve(user);
         } else {

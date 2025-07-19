@@ -37,7 +37,7 @@ export function LoginForm() {
     } else {
       setEmail('coach.thompson@email.com');
     }
-    setPassword('password');
+    setPassword('Ayger2024!');
   };
 
   return (
@@ -124,7 +124,7 @@ export function LoginForm() {
                 </Button>
               </div>
               <p className="text-xs text-center text-muted-foreground">
-                Password: password
+                Password: Ayger2024!
               </p>
             </div>
           </CardContent>
