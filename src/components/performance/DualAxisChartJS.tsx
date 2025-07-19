@@ -216,7 +216,7 @@ export function DualAxisChartJS() {
       },
       title: {
         display: true,
-        text: 'Dual-Axis Training Metrics',
+                 text: 'Aggregated Training Metrics',
       },
     },
     scales: {
@@ -257,7 +257,7 @@ export function DualAxisChartJS() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Dual-Axis Metrics (Chart.js)</CardTitle>
+                 <CardTitle>Aggregated Metrics</CardTitle>
         
         {/* Controls */}
         <div className="flex flex-wrap gap-4 items-center">

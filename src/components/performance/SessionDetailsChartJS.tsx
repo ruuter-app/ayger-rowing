@@ -1,9 +1,30 @@
 import React, { useState, useEffect } from 'react';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+import { Chart } from 'react-chartjs-2';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
-import { ComposedChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import { ChartWrapper } from './ChartWrapper';
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 interface SessionData {
   timeMinutes: number;
@@ -19,12 +40,12 @@ interface Session {
 }
 
 const METRICS = [
-  { key: 'distance', label: 'Distance (m)', type: 'bar', color: '#059669' },
-  { key: 'strokeRate', label: 'Stroke Rate', type: 'line', color: '#dc2626' },
-  { key: 'heartRate', label: 'Heart Rate', type: 'line', color: '#f59e0b' },
+  { key: 'distance', label: 'Distance (m)', type: 'bar', color: 'rgb(5, 150, 105)' },
+  { key: 'strokeRate', label: 'Stroke Rate', type: 'line', color: 'rgb(220, 38, 38)' },
+  { key: 'heartRate', label: 'Heart Rate', type: 'line', color: 'rgb(245, 158, 11)' },
 ];
 
-export function SessionDetailsChart() {
+export function SessionDetailsChartJS() {
   const [sessions, setSessions] = useState<Session[]>([]);
   const [selectedSession, setSelectedSession] = useState<Session | null>(null);
   const [selectedMetrics, setSelectedMetrics] = useState<string[]>(['distance', 'strokeRate']);
@@ -48,7 +69,6 @@ export function SessionDetailsChart() {
       }
     } catch (error) {
       console.error('Error loading sessions:', error);
-      console.error('Failed CSV path:', csvPath);
     } finally {
       setLoading(false);
     }
@@ -101,7 +121,7 @@ export function SessionDetailsChart() {
 
       // Convert to chart data format
       const data: SessionData[] = session.dataPoints.map((point: any, index: number) => ({
-        timeMinutes: Math.round(point.delta / 60), // Convert milliseconds to minutes
+        timeMinutes: Math.round(point.delta / 60000), // Convert milliseconds to minutes
         distance: point.distance,
         strokeRate: point.strokeRate,
         heartRate: point.heartRate
@@ -132,6 +152,22 @@ export function SessionDetailsChart() {
     return new Date(startTime * 1000).toLocaleDateString();
   };
 
+  // Test data for debugging
+  const testSession = {
+    filename: 'test-session',
+    startTime: Date.now() / 1000,
+    data: [
+      { timeMinutes: 0, distance: 0, strokeRate: 20, heartRate: 120 },
+      { timeMinutes: 1, distance: 100, strokeRate: 22, heartRate: 130 },
+      { timeMinutes: 2, distance: 220, strokeRate: 24, heartRate: 140 },
+      { timeMinutes: 3, distance: 350, strokeRate: 23, heartRate: 135 },
+      { timeMinutes: 4, distance: 480, strokeRate: 25, heartRate: 145 },
+      { timeMinutes: 5, distance: 620, strokeRate: 24, heartRate: 142 },
+    ]
+  };
+
+  const displaySession = selectedSession || testSession;
+
   if (loading) {
     return (
       <Card>
@@ -152,20 +188,84 @@ export function SessionDetailsChart() {
     );
   }
 
-  // Test data for debugging
-  const testSession = {
-    filename: 'test-session',
-    startTime: Date.now() / 1000,
-    data: [
-      { timeMinutes: 0, distance: 0, strokeRate: 20, heartRate: 120 },
-      { timeMinutes: 1, distance: 100, strokeRate: 22, heartRate: 130 },
-      { timeMinutes: 2, distance: 220, strokeRate: 24, heartRate: 140 },
-      { timeMinutes: 3, distance: 350, strokeRate: 23, heartRate: 135 },
-      { timeMinutes: 4, distance: 480, strokeRate: 25, heartRate: 145 },
-    ]
+  // Prepare datasets for Chart.js with dual axes
+  const datasets = selectedMetrics.map((metricKey, index) => {
+    const metric = getMetric(metricKey);
+    if (!metric) return null;
+
+    return {
+      label: metric.label,
+      data: displaySession.data.map(item => item[metricKey as keyof SessionData] as number),
+      borderColor: metric.color,
+      backgroundColor: metric.type === 'bar' ? metric.color + '80' : metric.color + '20',
+      borderWidth: 2,
+      tension: 0.1,
+      type: metric.type,
+      yAxisID: index === 0 ? 'y' : 'y1', // First metric on left axis, second on right
+    };
+  }).filter(Boolean);
+
+  const chartConfig = {
+    labels: displaySession.data.map(item => item.timeMinutes),
+    datasets,
   };
 
-  const displaySession = selectedSession || testSession;
+  const leftMetric = getMetric(selectedMetrics[0]);
+  const rightMetric = getMetric(selectedMetrics[1]);
+
+  const options = {
+    responsive: true,
+    interaction: {
+      intersect: false,
+      mode: 'index' as const,
+    },
+    plugins: {
+      legend: {
+        position: 'top' as const,
+      },
+      title: {
+        display: true,
+        text: `Session: ${displaySession.filename}`,
+      },
+    },
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: 'Time (minutes)',
+        },
+        grid: {
+          color: 'rgba(0, 0, 0, 0.1)',
+        },
+      },
+      y: {
+        type: 'linear' as const,
+        display: true,
+        position: 'left' as const,
+        beginAtZero: true,
+        title: {
+          display: true,
+          text: leftMetric?.label || '',
+        },
+        grid: {
+          color: 'rgba(0, 0, 0, 0.1)',
+        },
+      },
+      y1: {
+        type: 'linear' as const,
+        display: selectedMetrics.length > 1,
+        position: 'right' as const,
+        beginAtZero: true,
+        title: {
+          display: true,
+          text: rightMetric?.label || '',
+        },
+        grid: {
+          drawOnChartArea: false,
+        },
+      },
+    },
+  };
 
   return (
     <Card>
@@ -219,72 +319,8 @@ export function SessionDetailsChart() {
             No data available for this session
           </div>
         ) : (
-          <div className="h-80">
-            <ChartWrapper width="100%" height="100%">
-              <ResponsiveContainer width="100%" height="100%">
-                <ComposedChart data={displaySession.data} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis 
-                  dataKey="timeMinutes" 
-                  label={{ value: 'Time (minutes)', position: 'insideBottom', offset: -10 }}
-                />
-                
-                {selectedMetrics.length > 0 && (
-                  <YAxis 
-                    yAxisId="left" 
-                    orientation="left"
-                    label={{ value: getMetric(selectedMetrics[0])?.label || '', angle: -90, position: 'insideLeft' }}
-                  />
-                )}
-                
-                {selectedMetrics.length > 1 && (
-                  <YAxis 
-                    yAxisId="right" 
-                    orientation="right"
-                    label={{ value: getMetric(selectedMetrics[1])?.label || '', angle: 90, position: 'insideRight' }}
-                  />
-                )}
-                
-                <Tooltip 
-                  labelFormatter={(value) => `Time: ${value} minutes`}
-                  formatter={(value: any, name: string) => [value, name]}
-                />
-                <Legend />
-                
-                {selectedMetrics.map((metricKey, index) => {
-                  const metric = getMetric(metricKey);
-                  if (!metric) return null;
-                  
-                  const yAxisId = index === 0 ? 'left' : 'right';
-                  
-                  if (metric.type === 'bar') {
-                    return (
-                      <Bar
-                        key={metricKey}
-                        yAxisId={yAxisId}
-                        dataKey={metricKey}
-                        fill={metric.color}
-                        name={metric.label}
-                      />
-                    );
-                  } else {
-                    return (
-                      <Line
-                        key={metricKey}
-                        yAxisId={yAxisId}
-                        type="monotone"
-                        dataKey={metricKey}
-                        stroke={metric.color}
-                        strokeWidth={2}
-                        dot={{ fill: metric.color, strokeWidth: 2, r: 3 }}
-                        name={metric.label}
-                      />
-                    );
-                  }
-                })}
-              </ComposedChart>
-            </ResponsiveContainer>
-            </ChartWrapper>
+          <div className="h-96">
+            <Chart type="line" data={chartConfig} options={options} />
           </div>
         )}
       </CardContent>
