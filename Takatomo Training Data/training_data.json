@@ -18986,5 +18986,469 @@
       }
     ],
     "filename": "20250612-133430.pb"
+  },
+  {
+    "meta": {
+      "startTime": "1753116819",
+      "duration": 36,
+      "distance": 50,
+      "splitDistance": 50
+    },
+    "logs": [
+      {
+        "position": {
+          "longitude": 7.028492999999999,
+          "latitude": 51.079074999999996
+        }
+      },
+      {
+        "delta": 1069,
+        "distance": 1.3525523,
+        "position": {
+          "longitude": 7.028489833333333,
+          "latitude": 51.079063
+        }
+      },
+      {
+        "delta": 2215,
+        "distance": 2.8319366,
+        "strokerate": 51,
+        "position": {
+          "longitude": 7.028488833333333,
+          "latitude": 51.07904966666667
+        }
+      },
+      {
+        "delta": 3366,
+        "distance": 4.36409,
+        "strokerate": 52,
+        "position": {
+          "longitude": 7.0284889999999995,
+          "latitude": 51.079035833333336
+        }
+      },
+      {
+        "delta": 4517,
+        "distance": 5.782558,
+        "strokerate": 53,
+        "position": {
+          "longitude": 7.028492,
+          "latitude": 51.07902300000001
+        }
+      },
+      {
+        "delta": 5747,
+        "distance": 8.337565,
+        "strokerate": 53,
+        "position": {
+          "longitude": 7.028500499999999,
+          "latitude": 51.079000166666674
+        }
+      },
+      {
+        "delta": 7378,
+        "distance": 10.492255,
+        "strokerate": 51,
+        "position": {
+          "longitude": 7.0285088333333325,
+          "latitude": 51.07898116666667
+        }
+      },
+      {
+        "delta": 9038,
+        "distance": 12.493897,
+        "strokerate": 49,
+        "position": {
+          "longitude": 7.028519,
+          "latitude": 51.07896383333333
+        }
+      },
+      {
+        "delta": 10588,
+        "distance": 15.572468,
+        "strokerate": 46,
+        "position": {
+          "longitude": 7.0285366666666675,
+          "latitude": 51.07893766666666
+        }
+      },
+      {
+        "delta": 12259,
+        "distance": 17.588486,
+        "strokerate": 44,
+        "position": {
+          "longitude": 7.028548166666667,
+          "latitude": 51.07892066666667
+        }
+      },
+      {
+        "delta": 14028,
+        "distance": 19.482397,
+        "strokerate": 40,
+        "position": {
+          "longitude": 7.028560499999999,
+          "latitude": 51.078905
+        }
+      },
+      {
+        "delta": 15830,
+        "distance": 22.075922,
+        "strokerate": 37,
+        "position": {
+          "longitude": 7.028577333333334,
+          "latitude": 51.07888366666666
+        }
+      },
+      {
+        "delta": 17780,
+        "distance": 24.60111,
+        "strokerate": 35,
+        "position": {
+          "longitude": 7.028592833333333,
+          "latitude": 51.07886283333334
+        }
+      },
+      {
+        "delta": 19471,
+        "distance": 26.566702,
+        "strokerate": 34,
+        "position": {
+          "longitude": 7.028602333333334,
+          "latitude": 51.07884616666667
+        }
+      },
+      {
+        "delta": 21351,
+        "distance": 28.944109,
+        "strokerate": 34,
+        "position": {
+          "longitude": 7.028612,
+          "latitude": 51.078825666666674
+        }
+      },
+      {
+        "delta": 23081,
+        "distance": 31.694933,
+        "strokerate": 33,
+        "position": {
+          "longitude": 7.028629499999999,
+          "latitude": 51.07880316666667
+        }
+      },
+      {
+        "delta": 25045,
+        "distance": 35.001778,
+        "strokerate": 32,
+        "position": {
+          "longitude": 7.0286488333333335,
+          "latitude": 51.07877583333334
+        }
+      },
+      {
+        "delta": 26811,
+        "distance": 37.55905,
+        "strokerate": 32,
+        "position": {
+          "longitude": 7.028664333333334,
+          "latitude": 51.07875483333334
+        }
+      },
+      {
+        "delta": 28691,
+        "distance": 40.513012,
+        "strokerate": 33,
+        "position": {
+          "longitude": 7.028681000000001,
+          "latitude": 51.07873033333333
+        }
+      },
+      {
+        "delta": 30691,
+        "distance": 43.404167,
+        "strokerate": 32,
+        "position": {
+          "longitude": 7.0286971666666656,
+          "latitude": 51.078706333333336
+        }
+      },
+      {
+        "delta": 30791,
+        "distance": 43.404167,
+        "strokerate": 32,
+        "position": {
+          "longitude": 7.0286971666666656,
+          "latitude": 51.078706333333336
+        }
+      },
+      {
+        "delta": 32046,
+        "distance": 45.640583,
+        "strokerate": 32,
+        "position": {
+          "longitude": 7.028707666666666,
+          "latitude": 51.07868733333333
+        }
+      },
+      {
+        "delta": 32918,
+        "distance": 46.50641,
+        "strokerate": 32,
+        "position": {
+          "longitude": 7.028711833333333,
+          "latitude": 51.07868
+        }
+      },
+      {
+        "delta": 34740,
+        "distance": 49.505287,
+        "strokerate": 31,
+        "position": {
+          "longitude": 7.028723333333333,
+          "latitude": 51.07865400000001
+        }
+      },
+      {
+        "delta": 35044,
+        "distance": 50.27741,
+        "strokerate": 31,
+        "position": {
+          "longitude": 7.028725499999999,
+          "latitude": 51.07864716666666
+        }
+      }
+    ],
+    "filename": "20250721-165339.pb"
+  },
+  {
+    "meta": {
+      "startTime": "1753116867",
+      "duration": 33,
+      "distance": 50,
+      "splitDistance": 50
+    },
+    "logs": [
+      {
+        "position": {
+          "longitude": 7.0287365,
+          "latitude": 51.07862866666666
+        }
+      },
+      {
+        "delta": 926,
+        "distance": 0.71890706,
+        "position": {
+          "longitude": 7.028732666666667,
+          "latitude": 51.07863466666666
+        }
+      },
+      {
+        "delta": 2577,
+        "distance": 3.012481,
+        "strokerate": 65,
+        "position": {
+          "longitude": 7.028718666666666,
+          "latitude": 51.07865333333333
+        }
+      },
+      {
+        "delta": 4107,
+        "distance": 5.5821342,
+        "strokerate": 47,
+        "position": {
+          "longitude": 7.0287045,
+          "latitude": 51.078674666666664
+        }
+      },
+      {
+        "delta": 5307,
+        "distance": 7.4653907,
+        "strokerate": 45,
+        "position": {
+          "longitude": 7.0286954999999995,
+          "latitude": 51.078690666666674
+        }
+      },
+      {
+        "delta": 6850,
+        "distance": 10.9346,
+        "strokerate": 43,
+        "position": {
+          "longitude": 7.0286798333333325,
+          "latitude": 51.07872033333333
+        }
+      },
+      {
+        "delta": 8767,
+        "distance": 13.284754,
+        "strokerate": 42,
+        "position": {
+          "longitude": 7.0286655,
+          "latitude": 51.0787395
+        }
+      },
+      {
+        "delta": 10357,
+        "distance": 16.521904,
+        "strokerate": 41,
+        "position": {
+          "longitude": 7.0286495,
+          "latitude": 51.07876683333334
+        }
+      },
+      {
+        "delta": 12127,
+        "distance": 18.745037,
+        "strokerate": 38,
+        "position": {
+          "longitude": 7.028640833333332,
+          "latitude": 51.07878616666667
+        }
+      },
+      {
+        "delta": 13659,
+        "distance": 21.132553,
+        "strokerate": 38,
+        "position": {
+          "longitude": 7.028630500000001,
+          "latitude": 51.078806666666665
+        }
+      },
+      {
+        "delta": 15267,
+        "distance": 23.58382,
+        "strokerate": 37,
+        "position": {
+          "longitude": 7.028619,
+          "latitude": 51.0788275
+        }
+      },
+      {
+        "delta": 16929,
+        "distance": 26.750572,
+        "strokerate": 37,
+        "position": {
+          "longitude": 7.028601666666666,
+          "latitude": 51.07885383333334
+        }
+      },
+      {
+        "delta": 18587,
+        "distance": 29.120054,
+        "strokerate": 36,
+        "position": {
+          "longitude": 7.028590666666665,
+          "latitude": 51.078874
+        }
+      },
+      {
+        "delta": 20400,
+        "distance": 32.26975,
+        "strokerate": 36,
+        "position": {
+          "longitude": 7.028576166666666,
+          "latitude": 51.078900833333336
+        }
+      },
+      {
+        "delta": 22006,
+        "distance": 34.293064,
+        "strokerate": 35,
+        "position": {
+          "longitude": 7.028563000000001,
+          "latitude": 51.07891716666666
+        }
+      },
+      {
+        "delta": 24007,
+        "distance": 37.456165,
+        "strokerate": 34,
+        "position": {
+          "longitude": 7.028545833333334,
+          "latitude": 51.0789435
+        }
+      },
+      {
+        "delta": 24027,
+        "distance": 37.456165,
+        "strokerate": 34,
+        "position": {
+          "longitude": 7.028545833333334,
+          "latitude": 51.0789435
+        }
+      },
+      {
+        "delta": 25717,
+        "distance": 39.72964,
+        "strokerate": 35,
+        "position": {
+          "longitude": 7.028534500000001,
+          "latitude": 51.07896266666667
+        }
+      },
+      {
+        "delta": 27717,
+        "distance": 42.94413,
+        "strokerate": 33,
+        "position": {
+          "longitude": 7.0285166666666665,
+          "latitude": 51.078989333333325
+        }
+      },
+      {
+        "delta": 27888,
+        "distance": 43.77241,
+        "strokerate": 33,
+        "position": {
+          "longitude": 7.0285139999999995,
+          "latitude": 51.07899666666667
+        }
+      },
+      {
+        "delta": 28863,
+        "distance": 45.168705,
+        "strokerate": 33,
+        "position": {
+          "longitude": 7.0285079999999995,
+          "latitude": 51.079008666666674
+        }
+      },
+      {
+        "delta": 29569,
+        "distance": 45.95409,
+        "strokerate": 33,
+        "position": {
+          "longitude": 7.0285065,
+          "latitude": 51.07901566666666
+        }
+      },
+      {
+        "delta": 31569,
+        "distance": 48.77876,
+        "strokerate": 33,
+        "position": {
+          "longitude": 7.028503333333333,
+          "latitude": 51.079041000000004
+        }
+      },
+      {
+        "delta": 31739,
+        "distance": 48.77876,
+        "strokerate": 33,
+        "position": {
+          "longitude": 7.028503333333333,
+          "latitude": 51.079041000000004
+        }
+      },
+      {
+        "delta": 32330,
+        "distance": 50.24769,
+        "strokerate": 32,
+        "position": {
+          "longitude": 7.028509499999999,
+          "latitude": 51.07905433333334
+        }
+      }
+    ],
+    "filename": "20250721-165427.pb"
   }
 ]
