@@ -55,7 +55,7 @@ export function LandingPage() {
             Made in Germany 🇩🇪
           </Badge>
           <h1 className="text-5xl md:text-7xl font-bold text-ayger-navy mb-6">
-            SpeedAir Sculls 🚀
+            SpeedAir Sculls 🚀 ✅
           </h1>
           <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
             Cut Through Air<br />
