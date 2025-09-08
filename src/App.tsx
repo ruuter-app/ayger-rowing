@@ -5,6 +5,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { HashRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./components/auth/AuthContext";
 
+import { LandingPage } from "./pages/LandingPage";
+import { ProductDetailPage } from "./pages/ProductDetailPage";
+import { BlogPage } from "./pages/BlogPage";
 import { PerformancePage } from "./pages/PerformancePage";
 import { UploadPage } from "./pages/UploadPage";
 import { CoachDashboard } from "./pages/CoachDashboard";
@@ -25,8 +28,10 @@ const App = () => {
             <Sonner />
             <HashRouter>
             <Routes>
-              <Route path="/" element={<PerformancePage />} />
+              <Route path="/" element={<LandingPage />} />
               <Route path="/login" element={<LoginForm />} />
+              <Route path="/product/:productId" element={<ProductDetailPage />} />
+              <Route path="/blog" element={<BlogPage />} />
 
               <Route path="/athlete/performance" element={<PerformancePage />} />
               <Route path="/athlete/upload" element={<UploadPage />} />
