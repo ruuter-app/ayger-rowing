@@ -215,7 +215,7 @@ export function BlogPage() {
           <div className="flex items-center justify-between">
             <Link to="/" className="flex items-center space-x-2">
               <img 
-                src="/images/ayger/logo.png" 
+                src="/images/ayger/logo.png?v=1" 
                 alt="Ayger Logo" 
                 className="h-10 w-auto"
               />
@@ -324,7 +324,7 @@ export function BlogPage() {
             <div>
               <div className="flex items-center space-x-2 mb-4">
                 <img 
-                  src="/images/ayger/logo.png" 
+                  src="/images/ayger/logo.png?v=1" 
                   alt="Ayger Logo" 
                   className="h-8 w-auto filter brightness-0 invert"
                 />
