@@ -41,13 +41,93 @@ export function LandingPage() {
 
       {/* Hero Section */}
       <section id="hero" className="relative min-h-screen flex items-center justify-center px-6 overflow-hidden scroll-snap-section">
-        {/* Background Image */}
+        {/* Video Background */}
         <div className="absolute inset-0 z-0">
-          <img 
-            src={`${import.meta.env.BASE_URL}images/ayger/rowing-lifestyle-1.jpg?v=1`} 
-            alt="Rowing Lifestyle" 
-            className="w-full h-full object-cover opacity-20"
-          />
+          <div className="w-full h-full bg-gradient-to-br from-blue-900/80 to-blue-600/80 flex items-center justify-center">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 w-full max-w-6xl p-4">
+              {/* YouTube Shorts Videos */}
+              <div className="aspect-[9/16] bg-black/20 rounded-lg overflow-hidden">
+                <iframe
+                  src="https://www.youtube.com/embed/j_g8nd-3lg8?autoplay=1&mute=1&loop=1&playlist=j_g8nd-3lg8&controls=0&showinfo=0&rel=0&modestbranding=1"
+                  className="w-full h-full"
+                  allow="autoplay; encrypted-media"
+                  allowFullScreen
+                />
+              </div>
+              <div className="aspect-[9/16] bg-black/20 rounded-lg overflow-hidden">
+                <iframe
+                  src="https://www.youtube.com/embed/yFl49AgJPHM?autoplay=1&mute=1&loop=1&playlist=yFl49AgJPHM&controls=0&showinfo=0&rel=0&modestbranding=1"
+                  className="w-full h-full"
+                  allow="autoplay; encrypted-media"
+                  allowFullScreen
+                />
+              </div>
+              <div className="aspect-[9/16] bg-black/20 rounded-lg overflow-hidden">
+                <iframe
+                  src="https://www.youtube.com/embed/E3eL2fa6PmM?autoplay=1&mute=1&loop=1&playlist=E3eL2fa6PmM&controls=0&showinfo=0&rel=0&modestbranding=1"
+                  className="w-full h-full"
+                  allow="autoplay; encrypted-media"
+                  allowFullScreen
+                />
+              </div>
+              <div className="aspect-[9/16] bg-black/20 rounded-lg overflow-hidden">
+                <iframe
+                  src="https://www.youtube.com/embed/KPuSwrWjN7c?autoplay=1&mute=1&loop=1&playlist=KPuSwrWjN7c&controls=0&showinfo=0&rel=0&modestbranding=1"
+                  className="w-full h-full"
+                  allow="autoplay; encrypted-media"
+                  allowFullScreen
+                />
+              </div>
+              <div className="aspect-[9/16] bg-black/20 rounded-lg overflow-hidden">
+                <iframe
+                  src="https://www.youtube.com/embed/7FKfkQ3isJU?autoplay=1&mute=1&loop=1&playlist=7FKfkQ3isJU&controls=0&showinfo=0&rel=0&modestbranding=1"
+                  className="w-full h-full"
+                  allow="autoplay; encrypted-media"
+                  allowFullScreen
+                />
+              </div>
+              <div className="aspect-[9/16] bg-black/20 rounded-lg overflow-hidden">
+                <iframe
+                  src="https://www.youtube.com/embed/D6VU5J8Id4s?autoplay=1&mute=1&loop=1&playlist=D6VU5J8Id4s&controls=0&showinfo=0&rel=0&modestbranding=1"
+                  className="w-full h-full"
+                  allow="autoplay; encrypted-media"
+                  allowFullScreen
+                />
+              </div>
+              <div className="aspect-[9/16] bg-black/20 rounded-lg overflow-hidden">
+                <iframe
+                  src="https://www.youtube.com/embed/SVExeopZ0UU?autoplay=1&mute=1&loop=1&playlist=SVExeopZ0UU&controls=0&showinfo=0&rel=0&modestbranding=1"
+                  className="w-full h-full"
+                  allow="autoplay; encrypted-media"
+                  allowFullScreen
+                />
+              </div>
+              <div className="aspect-[9/16] bg-black/20 rounded-lg overflow-hidden">
+                <iframe
+                  src="https://www.youtube.com/embed/T0n90Z9Am9M?autoplay=1&mute=1&loop=1&playlist=T0n90Z9Am9M&controls=0&showinfo=0&rel=0&modestbranding=1"
+                  className="w-full h-full"
+                  allow="autoplay; encrypted-media"
+                  allowFullScreen
+                />
+              </div>
+              <div className="aspect-[9/16] bg-black/20 rounded-lg overflow-hidden">
+                <iframe
+                  src="https://www.youtube.com/embed/JAuKKl-6Gm0?autoplay=1&mute=1&loop=1&playlist=JAuKKl-6Gm0&controls=0&showinfo=0&rel=0&modestbranding=1"
+                  className="w-full h-full"
+                  allow="autoplay; encrypted-media"
+                  allowFullScreen
+                />
+              </div>
+              <div className="aspect-[9/16] bg-black/20 rounded-lg overflow-hidden">
+                <iframe
+                  src="https://www.youtube.com/embed/qdivVy9Qu6I?autoplay=1&mute=1&loop=1&playlist=qdivVy9Qu6I&controls=0&showinfo=0&rel=0&modestbranding=1"
+                  className="w-full h-full"
+                  allow="autoplay; encrypted-media"
+                  allowFullScreen
+                />
+              </div>
+            </div>
+          </div>
         </div>
         
         <div className="container mx-auto text-center relative z-10">
