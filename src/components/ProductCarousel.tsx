@@ -31,7 +31,7 @@ const products: Product[] = [
     tagline: 'Forget Wind Resistance, Feel the Speed! 🚀💨',
     category: 'Professional',
     categoryColor: 'bg-blue-100 text-blue-800',
-    image: '/ayger-rowing/images/ayger/speedair-pro.jpg?v=1',
+    image: `${import.meta.env.BASE_URL}images/ayger/speedair-pro.jpg?v=1`,
     link: '/product/speedair-pro'
   },
   {
@@ -41,7 +41,7 @@ const products: Product[] = [
     tagline: 'Unbreakable Strength, Unstoppable Speed',
     category: 'Innovative',
     categoryColor: 'bg-green-100 text-green-800',
-    image: '/ayger-rowing/images/ayger/speedair-coastal.jpg?v=1',
+    image: `${import.meta.env.BASE_URL}images/ayger/speedair-coastal.jpg?v=1`,
     link: '/product/speedair-coastal'
   },
   {
@@ -51,7 +51,7 @@ const products: Product[] = [
     tagline: 'Simple, Reliable, Effective!',
     category: 'Entry Level',
     categoryColor: 'bg-orange-100 text-orange-800',
-    image: '/ayger-rowing/images/ayger/rowbill-lite.jpg?v=1',
+    image: `${import.meta.env.BASE_URL}images/ayger/rowbill-lite.jpg?v=1`,
     link: '/product/rowbill-lite'
   },
   {
@@ -61,7 +61,7 @@ const products: Product[] = [
     tagline: 'Your Rowing, Your Data, Your Progress!',
     category: 'High End',
     categoryColor: 'bg-purple-100 text-purple-800',
-    image: '/ayger-rowing/images/ayger/rowbill-speed.jpg?v=1',
+    image: `${import.meta.env.BASE_URL}images/ayger/rowbill-speed.jpg?v=1`,
     link: '/product/rowbill-speed'
   }
 ];

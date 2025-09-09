@@ -19,7 +19,7 @@ export function LandingPage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <img 
-                src="/ayger-rowing/images/ayger/logo.png?v=1" 
+                src={`${import.meta.env.BASE_URL}images/ayger/logo.png?v=1`} 
                 alt="Ayger Logo" 
                 className="h-10 w-auto"
               />
@@ -44,7 +44,7 @@ export function LandingPage() {
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
           <img 
-            src="/ayger-rowing/images/ayger/rowing-lifestyle-1.jpg?v=1" 
+            src={`${import.meta.env.BASE_URL}images/ayger/rowing-lifestyle-1.jpg?v=1`} 
             alt="Rowing Lifestyle" 
             className="w-full h-full object-cover opacity-20"
           />
@@ -101,7 +101,7 @@ export function LandingPage() {
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
           <img 
-            src="/ayger-rowing/images/ayger/rowing-lifestyle-2.jpg?v=1" 
+            src={`${import.meta.env.BASE_URL}images/ayger/rowing-lifestyle-2.jpg?v=1`} 
             alt="Competitive Rowing" 
             className="w-full h-full object-cover opacity-10"
           />
@@ -254,7 +254,7 @@ export function LandingPage() {
             <div>
               <div className="flex items-center space-x-2 mb-4">
                 <img 
-                  src="/ayger-rowing/images/ayger/logo.png?v=1" 
+                  src={`${import.meta.env.BASE_URL}images/ayger/logo.png?v=1`} 
                   alt="Ayger Logo" 
                   className="h-8 w-auto filter brightness-0 invert"
                 />
