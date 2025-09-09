@@ -6,15 +6,30 @@ import { ArrowRight, Star, Shield, Zap, Target } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { ProductCarousel } from '@/components/ProductCarousel';
 import { ScrollNavigation } from '@/components/ScrollNavigation';
+import { VideoSlideshow } from '@/components/VideoSlideshow';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 export function LandingPage() {
   const sections = ['hero', 'products', 'about', 'blog', 'contact'];
 
+  // Initialize theme from localStorage
+  React.useEffect(() => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else if (savedTheme === 'light') {
+      document.documentElement.classList.remove('dark');
+    } else {
+      // Default to dark theme
+      document.documentElement.classList.add('dark');
+    }
+  }, []);
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+    <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
       <ScrollNavigation sections={sections} />
       {/* Navigation */}
-      <nav className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
+      <nav className="border-b border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
@@ -25,12 +40,13 @@ export function LandingPage() {
               />
             </div>
             <div className="hidden md:flex items-center space-x-8">
-              <a href="#products" className="text-gray-600 hover:text-ayger-navy transition-colors">Products</a>
-              <a href="#about" className="text-gray-600 hover:text-ayger-navy transition-colors">About</a>
-              <a href="#blog" className="text-gray-600 hover:text-ayger-navy transition-colors">Blog</a>
-              <a href="#contact" className="text-gray-600 hover:text-ayger-navy transition-colors">Contact</a>
+              <a href="#products" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">Products</a>
+              <a href="#about" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">About</a>
+              <a href="#blog" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">Blog</a>
+              <a href="#contact" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">Contact</a>
+              <ThemeToggle />
               <Link to="/login">
-                <Button variant="outline" className="border-ayger-navy text-ayger-navy hover:bg-ayger-navy hover:text-white">
+                <Button variant="outline" className="border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white">
                   Login
                 </Button>
               </Link>
@@ -39,108 +55,30 @@ export function LandingPage() {
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <section id="hero" className="relative min-h-screen flex items-center justify-center px-6 overflow-hidden scroll-snap-section">
-        {/* Video Background */}
-        <div className="absolute inset-0 z-0">
-          <div className="w-full h-full bg-gradient-to-br from-blue-900/80 to-blue-600/80 flex items-center justify-center">
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 w-full max-w-6xl p-4">
-              {/* YouTube Shorts Videos */}
-              <div className="aspect-[9/16] bg-black/20 rounded-lg overflow-hidden">
-                <iframe
-                  src="https://www.youtube.com/embed/j_g8nd-3lg8?autoplay=1&mute=1&loop=1&playlist=j_g8nd-3lg8&controls=0&showinfo=0&rel=0&modestbranding=1"
-                  className="w-full h-full"
-                  allow="autoplay; encrypted-media"
-                  allowFullScreen
-                />
-              </div>
-              <div className="aspect-[9/16] bg-black/20 rounded-lg overflow-hidden">
-                <iframe
-                  src="https://www.youtube.com/embed/yFl49AgJPHM?autoplay=1&mute=1&loop=1&playlist=yFl49AgJPHM&controls=0&showinfo=0&rel=0&modestbranding=1"
-                  className="w-full h-full"
-                  allow="autoplay; encrypted-media"
-                  allowFullScreen
-                />
-              </div>
-              <div className="aspect-[9/16] bg-black/20 rounded-lg overflow-hidden">
-                <iframe
-                  src="https://www.youtube.com/embed/E3eL2fa6PmM?autoplay=1&mute=1&loop=1&playlist=E3eL2fa6PmM&controls=0&showinfo=0&rel=0&modestbranding=1"
-                  className="w-full h-full"
-                  allow="autoplay; encrypted-media"
-                  allowFullScreen
-                />
-              </div>
-              <div className="aspect-[9/16] bg-black/20 rounded-lg overflow-hidden">
-                <iframe
-                  src="https://www.youtube.com/embed/KPuSwrWjN7c?autoplay=1&mute=1&loop=1&playlist=KPuSwrWjN7c&controls=0&showinfo=0&rel=0&modestbranding=1"
-                  className="w-full h-full"
-                  allow="autoplay; encrypted-media"
-                  allowFullScreen
-                />
-              </div>
-              <div className="aspect-[9/16] bg-black/20 rounded-lg overflow-hidden">
-                <iframe
-                  src="https://www.youtube.com/embed/7FKfkQ3isJU?autoplay=1&mute=1&loop=1&playlist=7FKfkQ3isJU&controls=0&showinfo=0&rel=0&modestbranding=1"
-                  className="w-full h-full"
-                  allow="autoplay; encrypted-media"
-                  allowFullScreen
-                />
-              </div>
-              <div className="aspect-[9/16] bg-black/20 rounded-lg overflow-hidden">
-                <iframe
-                  src="https://www.youtube.com/embed/D6VU5J8Id4s?autoplay=1&mute=1&loop=1&playlist=D6VU5J8Id4s&controls=0&showinfo=0&rel=0&modestbranding=1"
-                  className="w-full h-full"
-                  allow="autoplay; encrypted-media"
-                  allowFullScreen
-                />
-              </div>
-              <div className="aspect-[9/16] bg-black/20 rounded-lg overflow-hidden">
-                <iframe
-                  src="https://www.youtube.com/embed/SVExeopZ0UU?autoplay=1&mute=1&loop=1&playlist=SVExeopZ0UU&controls=0&showinfo=0&rel=0&modestbranding=1"
-                  className="w-full h-full"
-                  allow="autoplay; encrypted-media"
-                  allowFullScreen
-                />
-              </div>
-              <div className="aspect-[9/16] bg-black/20 rounded-lg overflow-hidden">
-                <iframe
-                  src="https://www.youtube.com/embed/T0n90Z9Am9M?autoplay=1&mute=1&loop=1&playlist=T0n90Z9Am9M&controls=0&showinfo=0&rel=0&modestbranding=1"
-                  className="w-full h-full"
-                  allow="autoplay; encrypted-media"
-                  allowFullScreen
-                />
-              </div>
-              <div className="aspect-[9/16] bg-black/20 rounded-lg overflow-hidden">
-                <iframe
-                  src="https://www.youtube.com/embed/JAuKKl-6Gm0?autoplay=1&mute=1&loop=1&playlist=JAuKKl-6Gm0&controls=0&showinfo=0&rel=0&modestbranding=1"
-                  className="w-full h-full"
-                  allow="autoplay; encrypted-media"
-                  allowFullScreen
-                />
-              </div>
-              <div className="aspect-[9/16] bg-black/20 rounded-lg overflow-hidden">
-                <iframe
-                  src="https://www.youtube.com/embed/qdivVy9Qu6I?autoplay=1&mute=1&loop=1&playlist=qdivVy9Qu6I&controls=0&showinfo=0&rel=0&modestbranding=1"
-                  className="w-full h-full"
-                  allow="autoplay; encrypted-media"
-                  allowFullScreen
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <div className="container mx-auto text-center relative z-10">
+      {/* Header Section */}
+      <section className="py-16 bg-gradient-to-br from-gray-50 via-blue-50 to-gray-100 dark:from-gray-900 dark:via-blue-900 dark:to-gray-800">
+        <div className="container mx-auto text-center px-6">
           <Badge variant="secondary" className="mb-4 bg-blue-100 text-blue-800">
             Made in Germany 🇩🇪
           </Badge>
-          <h1 className="text-5xl md:text-7xl font-bold text-ayger-navy mb-6">
-            SpeedAir Sculls
+          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-4 drop-shadow-lg">
+            High-end Rowing Equipment
           </h1>
-          <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
-            Cut Through Air<br />
-            Conquer the Water
+          <p className="text-lg md:text-xl text-gray-600 dark:text-gray-200 max-w-3xl mx-auto drop-shadow-md">
+            Cut Through Air • Conquer the Water
           </p>
+        </div>
+      </section>
+
+      {/* Video Section */}
+      <section id="hero" className="relative min-h-screen flex flex-col items-center justify-center px-6 py-8 scroll-snap-section bg-gradient-to-br from-gray-100 via-blue-100 to-gray-200 dark:from-gray-900 dark:via-blue-900 dark:to-gray-800">
+        <div className="w-full max-w-4xl mx-auto flex flex-col items-center justify-center space-y-6">
+          {/* Video Slideshow */}
+          <div className="w-full flex justify-center">
+            <VideoSlideshow />
+          </div>
+
+          {/* Buttons under video */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button 
               size="lg" 
@@ -163,11 +101,11 @@ export function LandingPage() {
       </section>
 
       {/* Products Carousel */}
-      <section id="products" className="min-h-screen flex items-center justify-center px-6 bg-white scroll-snap-section">
+      <section id="products" className="min-h-screen flex items-center justify-center px-6 bg-gray-100 dark:bg-gray-800 scroll-snap-section">
         <div className="container mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-ayger-navy mb-4">Our Products</h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">Our Products</h2>
+            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
               Professional Products, Innovative Technologies.
             </p>
           </div>
@@ -177,7 +115,7 @@ export function LandingPage() {
       </section>
 
       {/* About Section */}
-      <section id="about" className="min-h-screen flex items-center justify-center px-6 bg-gradient-to-br from-slate-50 to-blue-50 relative overflow-hidden scroll-snap-section">
+      <section id="about" className="min-h-screen flex items-center justify-center px-6 bg-gradient-to-br from-gray-800 to-gray-900 relative overflow-hidden scroll-snap-section">
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
           <img 
@@ -189,8 +127,8 @@ export function LandingPage() {
         
         <div className="container mx-auto relative z-10">
           <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-4xl font-bold text-ayger-navy mb-8">About Ayger</h2>
-            <p className="text-lg text-gray-700 leading-relaxed">
+            <h2 className="text-4xl font-bold text-white mb-8">About Ayger</h2>
+            <p className="text-lg text-gray-300 leading-relaxed">
               Kürek sporunda en iyiye ulaşmak için en kaliteli ekipmanlara ihtiyacınız var. 
               Ayger olarak, dünya çapında en iyi kürek ekipmanlarını sizlere sunuyoruz. 
               Karbon fiber küreklerden yarış teknelerine, dayanıklı aksesuar ve yedek parçalara 
@@ -201,11 +139,11 @@ export function LandingPage() {
       </section>
 
       {/* Blog Section */}
-      <section id="blog" className="min-h-screen flex items-center justify-center px-6 bg-white scroll-snap-section">
+      <section id="blog" className="min-h-screen flex items-center justify-center px-6 bg-gray-800 scroll-snap-section">
         <div className="container mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-ayger-navy mb-4">Latest Articles</h2>
-            <p className="text-xl text-gray-600">Stay updated with the latest in rowing</p>
+            <h2 className="text-4xl font-bold text-white mb-4">Latest Articles</h2>
+            <p className="text-xl text-gray-300">Stay updated with the latest in rowing</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
@@ -267,11 +205,11 @@ export function LandingPage() {
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="min-h-screen flex items-center justify-center px-6 bg-gradient-to-br from-slate-50 to-blue-50 scroll-snap-section">
+      <section id="contact" className="min-h-screen flex items-center justify-center px-6 bg-gradient-to-br from-gray-900 to-blue-900 scroll-snap-section">
         <div className="container mx-auto">
           <div className="grid lg:grid-cols-2 gap-12">
             <div>
-              <h2 className="text-4xl font-bold text-ayger-navy mb-8">Contact Us</h2>
+              <h2 className="text-4xl font-bold text-white mb-8">Contact Us</h2>
               <div className="space-y-6">
                 <div>
                   <h3 className="text-xl font-semibold text-ayger-navy mb-2">Location</h3>
