@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { ArrowRight } from 'lucide-react';
 
 const heroImages = [
   'row-1-column-1-3-1536x1536.jpg',
@@ -54,16 +56,37 @@ export function HeroSlideshow() {
       <div className="absolute inset-0 flex flex-col items-center justify-center z-20">
         <div className="text-center px-6">
           <div className="mb-4">
-            <span className="inline-block bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium shadow-lg">
-              Made in Germany 🇩🇪
-            </span>
+            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-yellow-400 via-red-500 to-yellow-400 px-4 py-2 rounded-full shadow-lg">
+              <span className="text-black font-bold text-sm">🇩🇪</span>
+              <span className="text-black font-bold text-sm tracking-wide">MADE IN GERMANY</span>
+            </div>
           </div>
           <h1 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-4 drop-shadow-lg">
             High-end Rowing Equipment
           </h1>
-          <p className="text-lg md:text-xl text-gray-600 dark:text-gray-200 max-w-3xl mx-auto drop-shadow-md">
+          <p className="text-lg md:text-xl text-gray-600 dark:text-gray-200 max-w-3xl mx-auto drop-shadow-md mb-8">
             Cut Through Air • Conquer the Water
           </p>
+          
+          {/* Action Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button 
+              size="lg" 
+              className="bg-ayger-navy hover:bg-ayger-navy/90 text-white"
+              onClick={() => document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' })}
+            >
+              Explore Products
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+            <Button 
+              size="lg" 
+              variant="outline" 
+              className="border-white text-white hover:bg-white hover:text-ayger-navy bg-transparent dark:border-white dark:text-white dark:hover:bg-white dark:hover:text-ayger-navy"
+              onClick={() => document.getElementById('videos')?.scrollIntoView({ behavior: 'smooth' })}
+            >
+              Watch Videos
+            </Button>
+          </div>
         </div>
       </div>
       

@@ -70,25 +70,6 @@ export function LandingPage() {
             <VideoSlideshow />
           </div>
 
-          {/* Buttons under video */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button 
-              size="lg" 
-              className="bg-ayger-navy hover:bg-ayger-navy/90 text-white"
-              onClick={() => document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' })}
-            >
-              Explore Products
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-            <Button 
-              size="lg" 
-              variant="outline" 
-              className="border-ayger-navy text-ayger-navy hover:bg-ayger-navy hover:text-white"
-              onClick={() => document.getElementById('videos')?.scrollIntoView({ behavior: 'smooth' })}
-            >
-              Watch Videos
-            </Button>
-          </div>
         </div>
       </section>
 
@@ -131,62 +112,62 @@ export function LandingPage() {
       </section>
 
       {/* Blog Section */}
-      <section id="blog" className="min-h-screen flex items-center justify-center px-6 bg-gray-800 scroll-snap-section">
+      <section id="blog" className="min-h-screen flex items-center justify-center px-6 bg-gray-100 dark:bg-gray-800 scroll-snap-section">
         <div className="container mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-white mb-4">Latest Articles</h2>
-            <p className="text-xl text-gray-300">Stay updated with the latest in rowing</p>
+            <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">Latest Articles</h2>
+            <p className="text-xl text-gray-600 dark:text-gray-300">Stay updated with the latest in rowing</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            <Card className="group hover:shadow-xl transition-all duration-300 border-0 shadow-lg">
+            <Card className="group hover:shadow-xl transition-all duration-300 border-0 shadow-lg bg-white dark:bg-gray-700">
               <CardHeader>
-                <Badge variant="secondary" className="w-fit bg-blue-100 text-blue-800">
+                <Badge variant="secondary" className="w-fit bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">
                   February 28, 2025
                 </Badge>
-                <CardTitle className="text-ayger-navy">Kürek Sporuna Yeni Başlayanlar İçin Ekipman Rehberi</CardTitle>
+                <CardTitle className="text-gray-900 dark:text-white">Kürek Sporuna Yeni Başlayanlar İçin Ekipman Rehberi</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600 mb-4">
+                <p className="text-gray-600 dark:text-gray-300 mb-4">
                   Kürek sporu, hem fiziksel hem de zihinsel dayanıklılık gerektiren, teknik bilgi...
                 </p>
-                <Button variant="link" className="p-0 text-ayger-navy hover:text-ayger-navy/80">
+                <Button variant="link" className="p-0 text-ayger-navy dark:text-blue-400 hover:text-ayger-navy/80 dark:hover:text-blue-300">
                   Continue reading
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </CardContent>
             </Card>
 
-            <Card className="group hover:shadow-xl transition-all duration-300 border-0 shadow-lg">
+            <Card className="group hover:shadow-xl transition-all duration-300 border-0 shadow-lg bg-white dark:bg-gray-700">
               <CardHeader>
-                <Badge variant="secondary" className="w-fit bg-blue-100 text-blue-800">
+                <Badge variant="secondary" className="w-fit bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">
                   February 28, 2025
                 </Badge>
-                <CardTitle className="text-ayger-navy">Profesyonel Kürekçiler İçin En İyi Antrenman Teknikleri</CardTitle>
+                <CardTitle className="text-gray-900 dark:text-white">Profesyonel Kürekçiler İçin En İyi Antrenman Teknikleri</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600 mb-4">
+                <p className="text-gray-600 dark:text-gray-300 mb-4">
                   Kürek sporunda başarılı olmak sadece su üzerinde antrenman yapmakla sınırlı değildir...
                 </p>
-                <Button variant="link" className="p-0 text-ayger-navy hover:text-ayger-navy/80">
+                <Button variant="link" className="p-0 text-ayger-navy dark:text-blue-400 hover:text-ayger-navy/80 dark:hover:text-blue-300">
                   Continue reading
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </CardContent>
             </Card>
 
-            <Card className="group hover:shadow-xl transition-all duration-300 border-0 shadow-lg">
+            <Card className="group hover:shadow-xl transition-all duration-300 border-0 shadow-lg bg-white dark:bg-gray-700">
               <CardHeader>
-                <Badge variant="secondary" className="w-fit bg-blue-100 text-blue-800">
+                <Badge variant="secondary" className="w-fit bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">
                   February 28, 2025
                 </Badge>
-                <CardTitle className="text-ayger-navy">Karbon Fiber Küreklerin Avantajları ve Kullanım Rehberi</CardTitle>
+                <CardTitle className="text-gray-900 dark:text-white">Karbon Fiber Küreklerin Avantajları ve Kullanım Rehberi</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600 mb-4">
+                <p className="text-gray-600 dark:text-gray-300 mb-4">
                   Karbon fiber kürekler, profesyonel ve yarı-şampiyona seviyesindeki kürekçiler tarafından...
                 </p>
-                <Button variant="link" className="p-0 text-ayger-navy hover:text-ayger-navy/80">
+                <Button variant="link" className="p-0 text-ayger-navy dark:text-blue-400 hover:text-ayger-navy/80 dark:hover:text-blue-300">
                   Continue reading
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
@@ -197,26 +178,26 @@ export function LandingPage() {
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="min-h-screen flex items-center justify-center px-6 bg-gradient-to-br from-gray-900 to-blue-900 scroll-snap-section">
+      <section id="contact" className="min-h-screen flex items-center justify-center px-6 bg-gradient-to-br from-gray-200 to-blue-200 dark:from-gray-900 dark:to-blue-900 scroll-snap-section">
         <div className="container mx-auto">
           <div className="grid lg:grid-cols-2 gap-12">
             <div>
-              <h2 className="text-4xl font-bold text-white mb-8">Contact Us</h2>
+              <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-8">Contact Us</h2>
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-xl font-semibold text-ayger-navy mb-2">Location</h3>
-                  <p className="text-gray-600">
+                  <h3 className="text-xl font-semibold text-ayger-navy dark:text-blue-400 mb-2">Location</h3>
+                  <p className="text-gray-600 dark:text-gray-300">
                     Krefelder Str. 4 D-53909 Zülpich<br />
                     Germany
                   </p>
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold text-ayger-navy mb-2">Hours</h3>
-                  <p className="text-gray-600">Monday-Friday 8:00-17:00</p>
+                  <h3 className="text-xl font-semibold text-ayger-navy dark:text-blue-400 mb-2">Hours</h3>
+                  <p className="text-gray-600 dark:text-gray-300">Monday-Friday 8:00-17:00</p>
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold text-ayger-navy mb-2">Contact</h3>
-                  <p className="text-gray-600">
+                  <h3 className="text-xl font-semibold text-ayger-navy dark:text-blue-400 mb-2">Contact</h3>
+                  <p className="text-gray-600 dark:text-gray-300">
                     +49 2252 8380180<br />
                     ayger.rowing@gmail.com
                   </p>
@@ -224,19 +205,19 @@ export function LandingPage() {
               </div>
             </div>
             <div>
-              <h3 className="text-2xl font-semibold text-ayger-navy mb-6">Get in Touch</h3>
+              <h3 className="text-2xl font-semibold text-ayger-navy dark:text-blue-400 mb-6">Get in Touch</h3>
               <div className="space-y-4">
                 <input
                   type="text"
                   placeholder="Name"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ayger-navy focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-ayger-navy dark:focus:ring-blue-400 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                 />
                 <input
                   type="email"
                   placeholder="E-Mail"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ayger-navy focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-ayger-navy dark:focus:ring-blue-400 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                 />
-                <select className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ayger-navy focus:border-transparent">
+                <select className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-ayger-navy dark:focus:ring-blue-400 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white">
                   <option>I have some technical questions</option>
                   <option>I like to know, if i can try?</option>
                   <option>What about the prices</option>
@@ -246,9 +227,9 @@ export function LandingPage() {
                 <textarea
                   placeholder="Message"
                   rows={4}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ayger-navy focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-ayger-navy dark:focus:ring-blue-400 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                 ></textarea>
-                <Button className="w-full bg-ayger-navy hover:bg-ayger-navy/90">
+                <Button className="w-full bg-ayger-navy hover:bg-ayger-navy/90 dark:bg-blue-600 dark:hover:bg-blue-700">
                   Send Message
                 </Button>
               </div>

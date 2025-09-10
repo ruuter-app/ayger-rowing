@@ -30,7 +30,7 @@ const products: Product[] = [
     description: 'Racing Sculls designed for maximum performance and speed',
     tagline: 'Forget Wind Resistance, Feel the Speed! 🚀💨',
     category: 'Professional',
-    categoryColor: 'bg-blue-100 text-blue-800',
+    categoryColor: 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200',
     image: `${import.meta.env.BASE_URL}images/ayger/speedair-pro.jpg?v=1`,
     link: '/product/speedair-pro'
   },
@@ -40,7 +40,7 @@ const products: Product[] = [
     description: 'Coastal Racing Sculls built for durability and performance',
     tagline: 'Unbreakable Strength, Unstoppable Speed',
     category: 'Innovative',
-    categoryColor: 'bg-green-100 text-green-800',
+    categoryColor: 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200',
     image: `${import.meta.env.BASE_URL}images/ayger/speedair-coastal.jpg?v=1`,
     link: '/product/speedair-coastal'
   },
@@ -50,7 +50,7 @@ const products: Product[] = [
     description: 'Essential rowing monitor for beginners and enthusiasts',
     tagline: 'Simple, Reliable, Effective!',
     category: 'Entry Level',
-    categoryColor: 'bg-orange-100 text-orange-800',
+    categoryColor: 'bg-orange-100 dark:bg-orange-900 text-orange-800 dark:text-orange-200',
     image: `${import.meta.env.BASE_URL}images/ayger/rowbill-lite.jpg?v=1`,
     link: '/product/rowbill-lite'
   },
@@ -60,7 +60,7 @@ const products: Product[] = [
     description: 'Advanced rowing monitor with comprehensive data analysis',
     tagline: 'Your Rowing, Your Data, Your Progress!',
     category: 'High End',
-    categoryColor: 'bg-purple-100 text-purple-800',
+    categoryColor: 'bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200',
     image: `${import.meta.env.BASE_URL}images/ayger/rowbill-speed.jpg?v=1`,
     link: '/product/rowbill-speed'
   }
@@ -101,8 +101,8 @@ export function ProductCarousel() {
         <CarouselContent className="-ml-2 md:-ml-4">
           {products.map((product, index) => (
             <CarouselItem key={product.id} className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/2">
-              <Card className="group hover:shadow-xl transition-all duration-300 border-0 shadow-lg overflow-hidden h-full">
-                <div className="relative h-48 bg-gradient-to-br from-gray-50 to-gray-100">
+              <Card className="group hover:shadow-xl transition-all duration-300 border-0 shadow-lg overflow-hidden h-full bg-white dark:bg-gray-700">
+                <div className="relative h-48 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-600 dark:to-gray-700">
                   <img 
                     src={product.image} 
                     alt={product.name} 
@@ -110,8 +110,8 @@ export function ProductCarousel() {
                   />
                 </div>
                 <CardHeader className="text-center">
-                  <CardTitle className="text-ayger-navy">{product.name}</CardTitle>
-                  <CardDescription className="text-sm">
+                  <CardTitle className="text-gray-900 dark:text-white">{product.name}</CardTitle>
+                  <CardDescription className="text-sm text-gray-600 dark:text-gray-300">
                     {product.tagline}
                   </CardDescription>
                 </CardHeader>
@@ -120,12 +120,12 @@ export function ProductCarousel() {
                     <Badge variant="secondary" className={`mb-4 ${product.categoryColor}`}>
                       {product.category}
                     </Badge>
-                    <p className="text-sm text-gray-600 mb-4">
+                    <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
                       {product.description}
                     </p>
                   </div>
                   <Link to={product.link}>
-                    <Button className="w-full bg-ayger-navy hover:bg-ayger-navy/90">
+                    <Button className="w-full bg-ayger-navy hover:bg-ayger-navy/90 dark:bg-blue-600 dark:hover:bg-blue-700">
                       Learn More
                     </Button>
                   </Link>
