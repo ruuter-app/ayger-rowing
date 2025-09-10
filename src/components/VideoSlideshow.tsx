@@ -2,7 +2,27 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight, Play, Pause } from 'lucide-react';
 
-const videos = [
+// Desktop videos (regular YouTube format)
+const desktopVideos = [
+  {
+    id: '4rucRcfkb3w',
+    title: 'Professional Rowing Training',
+    url: 'https://www.youtube.com/embed/4rucRcfkb3w'
+  },
+  {
+    id: 'S2pJcuuqnpg',
+    title: 'Advanced Rowing Techniques',
+    url: 'https://www.youtube.com/embed/S2pJcuuqnpg'
+  },
+  {
+    id: 'OekseldS_8Y',
+    title: 'Elite Rowing Performance',
+    url: 'https://www.youtube.com/embed/OekseldS_8Y'
+  }
+];
+
+// Mobile videos (YouTube Shorts format)
+const mobileVideos = [
   {
     id: 'j_g8nd-3lg8',
     title: 'Ayger Rowing Technology',
@@ -59,17 +79,32 @@ export function VideoSlideshow() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isAutoPlay, setIsAutoPlay] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check if screen is mobile size
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768); // md breakpoint
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Get appropriate video list based on screen size
+  const videos = isMobile ? mobileVideos : desktopVideos;
 
   // Auto-advance slideshow
   useEffect(() => {
     if (isAutoPlay && isPlaying) {
       const interval = setInterval(() => {
         setCurrentIndex((prevIndex) => (prevIndex + 1) % videos.length);
-      }, 5000); // Change video every 5 seconds
+      }, 8000); // Change video every 8 seconds
 
       return () => clearInterval(interval);
     }
-  }, [isAutoPlay, isPlaying]);
+  }, [isAutoPlay, isPlaying, videos.length]);
 
   const nextVideo = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % videos.length);
@@ -85,9 +120,15 @@ export function VideoSlideshow() {
   };
 
   return (
-    <div className="relative w-full max-w-sm mx-auto">
+    <div className={`relative w-full mx-auto ${
+      isMobile ? 'max-w-sm' : 'max-w-4xl'
+    }`}>
       {/* Main Video Display */}
-      <div className="relative aspect-[9/16] bg-black rounded-lg overflow-hidden shadow-2xl max-h-[70vh]">
+      <div className={`relative bg-black rounded-lg overflow-hidden shadow-2xl ${
+        isMobile 
+          ? 'aspect-[9/16] w-full h-[80vh]' 
+          : 'aspect-[16/9] max-h-[80vh]'
+      }`}>
         <iframe
           key={currentIndex}
           src={`${videos[currentIndex].url}?autoplay=${isPlaying ? 1 : 0}&mute=1&loop=1&playlist=${videos[currentIndex].id}&controls=1&showinfo=0&rel=0&modestbranding=1`}

@@ -8,9 +8,10 @@ import { ProductCarousel } from '@/components/ProductCarousel';
 import { ScrollNavigation } from '@/components/ScrollNavigation';
 import { VideoSlideshow } from '@/components/VideoSlideshow';
 import { ThemeToggle } from '@/components/ThemeToggle';
+import { HeroSlideshow } from '@/components/HeroSlideshow';
 
 export function LandingPage() {
-  const sections = ['hero', 'products', 'about', 'blog', 'contact'];
+  const sections = ['hero', 'videos', 'products', 'about', 'blog', 'contact'];
 
   // Initialize theme from localStorage
   React.useEffect(() => {
@@ -40,6 +41,7 @@ export function LandingPage() {
               />
             </div>
             <div className="hidden md:flex items-center space-x-8">
+              <a href="#videos" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">Videos</a>
               <a href="#products" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">Products</a>
               <a href="#about" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">About</a>
               <a href="#blog" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">Blog</a>
@@ -55,23 +57,13 @@ export function LandingPage() {
         </div>
       </nav>
 
-      {/* Header Section */}
-      <section className="py-16 bg-gradient-to-br from-gray-50 via-blue-50 to-gray-100 dark:from-gray-900 dark:via-blue-900 dark:to-gray-800">
-        <div className="container mx-auto text-center px-6">
-          <Badge variant="secondary" className="mb-4 bg-blue-100 text-blue-800">
-            Made in Germany 🇩🇪
-          </Badge>
-          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-4 drop-shadow-lg">
-            High-end Rowing Equipment
-          </h1>
-          <p className="text-lg md:text-xl text-gray-600 dark:text-gray-200 max-w-3xl mx-auto drop-shadow-md">
-            Cut Through Air • Conquer the Water
-          </p>
-        </div>
+      {/* Hero Section with Background Slideshow */}
+      <section className="relative min-h-screen overflow-hidden">
+        <HeroSlideshow />
       </section>
 
       {/* Video Section */}
-      <section id="hero" className="relative min-h-screen flex flex-col items-center justify-center px-6 py-8 scroll-snap-section bg-gradient-to-br from-gray-100 via-blue-100 to-gray-200 dark:from-gray-900 dark:via-blue-900 dark:to-gray-800">
+      <section id="videos" className="relative min-h-screen flex flex-col items-center justify-center px-6 py-8 scroll-snap-section bg-gradient-to-br from-gray-100 via-blue-100 to-gray-200 dark:from-gray-900 dark:via-blue-900 dark:to-gray-800">
         <div className="w-full max-w-4xl mx-auto flex flex-col items-center justify-center space-y-6">
           {/* Video Slideshow */}
           <div className="w-full flex justify-center">
@@ -92,9 +84,9 @@ export function LandingPage() {
               size="lg" 
               variant="outline" 
               className="border-ayger-navy text-ayger-navy hover:bg-ayger-navy hover:text-white"
-              onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })}
+              onClick={() => document.getElementById('videos')?.scrollIntoView({ behavior: 'smooth' })}
             >
-              Learn More
+              Watch Videos
             </Button>
           </div>
         </div>
