@@ -2,13 +2,14 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ArrowRight, Star, Shield, Zap, Target } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { ProductCarousel } from '@/components/ProductCarousel';
+import { PRODUCTS } from '@/lib/products';
+import { ProductCard } from '@/components/ProductCard';
 import { ScrollNavigation } from '@/components/ScrollNavigation';
-import { VideoSlideshow } from '@/components/VideoSlideshow';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { HeroSlideshow } from '@/components/HeroSlideshow';
+import { VideoSlideshow } from '@/components/VideoSlideshow';
 
 export function LandingPage() {
   const sections = ['hero', 'videos', 'products', 'about', 'blog', 'contact'];
@@ -24,6 +25,14 @@ export function LandingPage() {
       // Default to dark theme
       document.documentElement.classList.add('dark');
     }
+  }, []);
+
+  React.useEffect(() => {
+    const previousBehavior = document.documentElement.style.scrollBehavior;
+    document.documentElement.style.scrollBehavior = 'smooth';
+    return () => {
+      document.documentElement.style.scrollBehavior = previousBehavior;
+    };
   }, []);
 
   return (
@@ -58,23 +67,22 @@ export function LandingPage() {
       </nav>
 
       {/* Hero Section with Background Slideshow */}
-      <section className="relative min-h-screen overflow-hidden">
+      <section id="hero" className="relative min-h-screen overflow-hidden">
         <HeroSlideshow />
       </section>
 
       {/* Video Section */}
-      <section id="videos" className="relative min-h-screen flex flex-col items-center justify-center px-6 py-8 scroll-snap-section bg-gradient-to-br from-gray-100 via-blue-100 to-gray-200 dark:from-gray-900 dark:via-blue-900 dark:to-gray-800">
+      <section id="videos" className="relative min-h-screen flex flex-col items-center justify-center px-6 py-8 bg-gradient-to-br from-gray-100 via-blue-100 to-gray-200 dark:from-gray-900 dark:via-blue-900 dark:to-gray-800">
         <div className="w-full max-w-4xl mx-auto flex flex-col items-center justify-center space-y-6">
           {/* Video Slideshow */}
           <div className="w-full flex justify-center">
             <VideoSlideshow />
           </div>
-
         </div>
       </section>
 
-      {/* Products Carousel */}
-      <section id="products" className="min-h-screen flex items-center justify-center px-6 bg-gray-100 dark:bg-gray-800 scroll-snap-section">
+      {/* Products Section */}
+      <section id="products" className="min-h-screen flex flex-col justify-center px-6 bg-gray-100 dark:bg-gray-800">
         <div className="container mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">Our Products</h2>
@@ -83,28 +91,35 @@ export function LandingPage() {
             </p>
           </div>
 
-          <ProductCarousel />
+          {/* Carousel wrapper */}
+          <div className="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-4 scroll-smooth" aria-label="Product carousel">
+            {PRODUCTS.map((p) => (
+              <div key={p.slug} className="snap-start shrink-0 w-full sm:w-[320px] lg:w-[340px] xl:w-[360px] flex">
+                <ProductCard product={p} />
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* About Section */}
-      <section id="about" className="min-h-screen flex items-center justify-center px-6 bg-gradient-to-br from-gray-800 to-gray-900 relative overflow-hidden scroll-snap-section">
+      <section id="about" className="min-h-screen flex items-center justify-center px-6 bg-gradient-to-br from-gray-800 to-gray-900 relative overflow-hidden">
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
-          <img 
-            src={`${import.meta.env.BASE_URL}images/ayger/rowing-lifestyle-2.jpg?v=1`} 
-            alt="Competitive Rowing" 
+          <img
+            src={`${import.meta.env.BASE_URL}images/ayger/rowing-lifestyle-2.jpg?v=1`}
+            alt="Competitive Rowing"
             className="w-full h-full object-cover opacity-10"
           />
         </div>
-        
+
         <div className="container mx-auto relative z-10">
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-4xl font-bold text-white mb-8">About Ayger</h2>
             <p className="text-lg text-gray-300 leading-relaxed">
-              Kürek sporunda en iyiye ulaşmak için en kaliteli ekipmanlara ihtiyacınız var. 
-              Ayger olarak, dünya çapında en iyi kürek ekipmanlarını sizlere sunuyoruz. 
-              Karbon fiber küreklerden yarış teknelerine, dayanıklı aksesuar ve yedek parçalara 
+              Kürek sporunda en iyiye ulaşmak için en kaliteli ekipmanlara ihtiyacınız var.
+              Ayger olarak, dünya çapında en iyi kürek ekipmanlarını sizlere sunuyoruz.
+              Karbon fiber küreklerden yarış teknelerine, dayanıklı aksesuar ve yedek parçalara
               kadar her şeyi en yüksek standartlarda üretiyor ve temin ediyoruz.
             </p>
           </div>
@@ -112,7 +127,7 @@ export function LandingPage() {
       </section>
 
       {/* Blog Section */}
-      <section id="blog" className="min-h-screen flex items-center justify-center px-6 bg-gray-100 dark:bg-gray-800 scroll-snap-section">
+      <section id="blog" className="min-h-screen flex items-center justify-center px-6 bg-gray-100 dark:bg-gray-800">
         <div className="container mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">Latest Articles</h2>
@@ -178,7 +193,7 @@ export function LandingPage() {
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="min-h-screen flex items-center justify-center px-6 bg-gradient-to-br from-gray-200 to-blue-200 dark:from-gray-900 dark:to-blue-900 scroll-snap-section">
+      <section id="contact" className="min-h-screen flex items-center justify-center px-6 bg-gradient-to-br from-gray-200 to-blue-200 dark:from-gray-900 dark:to-blue-900">
         <div className="container mx-auto">
           <div className="grid lg:grid-cols-2 gap-12">
             <div>

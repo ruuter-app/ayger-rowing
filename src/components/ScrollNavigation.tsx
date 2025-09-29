@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 
 interface ScrollNavigationProps {
@@ -7,55 +7,29 @@ interface ScrollNavigationProps {
 
 export function ScrollNavigation({ sections }: ScrollNavigationProps) {
   const [currentSection, setCurrentSection] = useState(0);
-  const [isScrolling, setIsScrolling] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      if (isScrolling) return;
-
       const scrollPosition = window.scrollY;
       const windowHeight = window.innerHeight;
       const currentIndex = Math.round(scrollPosition / windowHeight);
-      
+
       if (currentIndex !== currentSection && currentIndex >= 0 && currentIndex < sections.length) {
         setCurrentSection(currentIndex);
       }
     };
 
-    const handleWheel = (e: WheelEvent) => {
-      if (isScrolling) {
-        e.preventDefault();
-        return;
-      }
-
-      setIsScrolling(true);
-      const direction = e.deltaY > 0 ? 1 : -1;
-      const nextSection = Math.max(0, Math.min(sections.length - 1, currentSection + direction));
-      
-      if (nextSection !== currentSection) {
-        scrollToSection(nextSection);
-      }
-      
-      setTimeout(() => setIsScrolling(false), 1000);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    window.addEventListener('wheel', handleWheel, { passive: false });
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('wheel', handleWheel);
-    };
-  }, [currentSection, sections.length, isScrolling]);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [currentSection, sections]);
 
   const scrollToSection = (index: number) => {
     const element = document.getElementById(sections[index]);
     if (element) {
-      element.scrollIntoView({ 
+      element.scrollIntoView({
         behavior: 'smooth',
         block: 'start'
       });
-      setCurrentSection(index);
     }
   };
 

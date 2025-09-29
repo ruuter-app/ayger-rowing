@@ -179,17 +179,3 @@ All colors MUST be HSL.
     @apply bg-background text-foreground;
   }
 }
-
-/* Smooth scroll snap for section navigation */
-@layer utilities {
-  .scroll-snap-section {
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
-  }
-  
-  .scroll-container {
-    scroll-snap-type: y mandatory;
-    overflow-y: scroll;
-    height: 100vh;
-  }
-}
