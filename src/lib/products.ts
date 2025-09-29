@@ -18,7 +18,7 @@ export interface ProductRecord {
   media: ProductMediaItem[];
 }
 
-const img = (file: string) => `/images/ayger/${file}`;
+const img = (file: string) => `images/ayger/${file}`;
 
 export const PRODUCTS: ProductRecord[] = [
   {
