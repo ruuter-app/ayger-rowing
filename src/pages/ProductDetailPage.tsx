@@ -119,32 +119,49 @@ export function ProductDetailPage() {
               <div className="aspect-[16/9] bg-gray-100 rounded-xl overflow-hidden">
                 {(() => {
                   const [currentMediaIndex, setCurrentMediaIndex] = React.useState(0);
-                  const currentMedia = product.media[currentMediaIndex];
-                  const isVideo = currentMedia?.type === 'youtube';
-                  const poster = isVideo ? currentMedia.poster : currentMedia?.src;
-
-                  const videoSrc = isVideo ? currentMedia.src.replace('watch?v=', 'embed/').replace('shorts/', 'embed/') + '&autoplay=1&mute=1&loop=1&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&fs=0' : undefined;
 
                   return (
                     <div className="relative w-full h-full">
-                      {isVideo ? (
-                        <iframe
-                          className="w-full h-full"
-                          src={videoSrc}
-                          title={product.name}
-                          allow="autoplay; encrypted-media"
-                          allowFullScreen
-                        />
-                      ) : (
-                        <img src={poster} alt={currentMedia?.alt || product.name} className="w-full h-full object-cover" />
-                      )}
+                      {product.media.map((mediaItem, index) => {
+                        const isCurrent = index === currentMediaIndex;
+                        const isVideo = mediaItem.type === 'youtube';
+                        const poster = isVideo ? mediaItem.poster : mediaItem.src;
+                        const videoSrc = isVideo ? mediaItem.src.replace('watch?v=', 'embed/').replace('shorts/', 'embed/') + '&autoplay=1&mute=1&loop=1&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&fs=0' : undefined;
+
+                        return (
+                          <div
+                            key={index}
+                            className={`absolute inset-0 transition-opacity duration-700 ${
+                              isCurrent ? 'opacity-100 z-10' : 'opacity-0 z-0'
+                            }`}
+                          >
+                            {isVideo ? (
+                              <iframe
+                                className="w-full h-full"
+                                src={isCurrent ? videoSrc : undefined}
+                                title={product.name}
+                                allow="autoplay; encrypted-media"
+                                allowFullScreen
+                              />
+                            ) : (
+                              <img
+                                src={poster}
+                                alt={mediaItem.alt || `${product.name} - ${index + 1}`}
+                                className="w-full h-full object-cover"
+                              />
+                            )}
+                          </div>
+                        );
+                      })}
                       {product.media.length > 1 && (
-                        <div className="absolute bottom-4 right-4 flex gap-2">
+                        <div className="absolute bottom-4 right-4 flex gap-2 z-20">
                           {product.media.map((_, index) => (
                             <button
                               key={index}
                               onClick={() => setCurrentMediaIndex(index)}
-                              className={`w-3 h-3 rounded-full ${index === currentMediaIndex ? 'bg-white' : 'bg-white/50'}`}
+                              className={`w-3 h-3 rounded-full transition-all duration-200 ${
+                                index === currentMediaIndex ? 'bg-white scale-125' : 'bg-white/60 hover:bg-white/80'
+                              }`}
                             />
                           ))}
                         </div>
