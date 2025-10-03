@@ -2,17 +2,25 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, CheckCircle } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { ArrowLeft, CheckCircle, ShoppingCart, Plus, Minus } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
 import { getProductBySlug, formatPriceEur, ProductRecord } from '@/lib/products';
 import { PayPalButton } from '@/components/payments/PayPalButton';
 import { QuoteModal } from '@/components/quotes/QuoteModal';
+import { useCart } from '@/components/cart/CartContext';
+import { CartSidebar } from '@/components/cart/CartSidebar';
 
 // Switched to centralized product catalog
 
 export function ProductDetailPage() {
   const { productId } = useParams<{ productId: string }>();
   const product = productId ? getProductBySlug(productId) : undefined;
+  const { addToCart, items } = useCart();
+  const [quantity, setQuantity] = React.useState(1);
+
+  const cartItem = items.find(item => item.product.slug === productId);
+  const currentQuantity = cartItem?.quantity || 0;
 
   if (!product) {
     return (
@@ -90,12 +98,15 @@ export function ProductDetailPage() {
                 className="h-10 w-auto"
               />
             </Link>
-            <Link to="/">
-              <Button variant="outline" className="border-ayger-navy text-ayger-navy hover:bg-ayger-navy hover:text-white">
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                Back to Products
-              </Button>
-            </Link>
+            <div className="flex items-center gap-4">
+              <Link to="/">
+                <Button variant="outline" className="border-ayger-navy text-ayger-navy hover:bg-ayger-navy hover:text-white">
+                  <ArrowLeft className="mr-2 h-4 w-4" />
+                  Back to Products
+                </Button>
+              </Link>
+              <CartSidebar />
+            </div>
           </div>
         </div>
       </nav>
@@ -106,17 +117,41 @@ export function ProductDetailPage() {
           <div className="grid lg:grid-cols-3 gap-10">
             <div className="lg:col-span-2 space-y-6">
               <div className="aspect-[16/9] bg-gray-100 rounded-xl overflow-hidden">
-                {product.media[0]?.type === 'youtube' ? (
-                  <iframe
-                    className="w-full h-full"
-                    src={product.media[0].src.replace('watch?v=', 'embed/').replace('shorts/', 'embed/') + '&mute=1&controls=1&playsinline=1'}
-                    title={product.name}
-                    allow="autoplay; encrypted-media; picture-in-picture"
-                    allowFullScreen
-                  />
-                ) : (
-                  <img src={product.media[0]?.src} alt={product.media[0]?.alt || product.name} className="w-full h-full object-cover" />
-                )}
+                {(() => {
+                  const [currentMediaIndex, setCurrentMediaIndex] = React.useState(0);
+                  const currentMedia = product.media[currentMediaIndex];
+                  const isVideo = currentMedia?.type === 'youtube';
+                  const poster = isVideo ? currentMedia.poster : currentMedia?.src;
+
+                  const videoSrc = isVideo ? currentMedia.src.replace('watch?v=', 'embed/').replace('shorts/', 'embed/') + '&autoplay=1&mute=1&loop=1&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&fs=0' : undefined;
+
+                  return (
+                    <div className="relative w-full h-full">
+                      {isVideo ? (
+                        <iframe
+                          className="w-full h-full"
+                          src={videoSrc}
+                          title={product.name}
+                          allow="autoplay; encrypted-media"
+                          allowFullScreen
+                        />
+                      ) : (
+                        <img src={poster} alt={currentMedia?.alt || product.name} className="w-full h-full object-cover" />
+                      )}
+                      {product.media.length > 1 && (
+                        <div className="absolute bottom-4 right-4 flex gap-2">
+                          {product.media.map((_, index) => (
+                            <button
+                              key={index}
+                              onClick={() => setCurrentMediaIndex(index)}
+                              className={`w-3 h-3 rounded-full ${index === currentMediaIndex ? 'bg-white' : 'bg-white/50'}`}
+                            />
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })()}
               </div>
 
               <div>
@@ -148,8 +183,89 @@ export function ProductDetailPage() {
                   <CardDescription>Ships from Germany, EU.</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="text-3xl font-bold">{formatPriceEur(product.priceEur)}</div>
-                  <PayPalButton amountEur={product.priceEur} />
+                  <div className="text-3xl font-bold">{formatPriceEur(product.priceEur * quantity)}</div>
+                  <div className="text-sm text-gray-600">VAT included</div>
+
+                  {/* Quantity Selector */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Quantity</label>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                        disabled={quantity <= 1}
+                      >
+                        <Minus className="h-4 w-4" />
+                      </Button>
+                      <Input
+                        type="number"
+                        min="1"
+                        max="99"
+                        value={quantity}
+                        onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+                        className="w-20 text-center"
+                      />
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setQuantity(Math.min(99, quantity + 1))}
+                        disabled={quantity >= 99}
+                      >
+                        <Plus className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Add to Cart / Update Cart */}
+                  {currentQuantity > 0 ? (
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2 text-sm text-green-600">
+                        <ShoppingCart className="h-4 w-4" />
+                        {currentQuantity} in cart
+                      </div>
+                      <div className="flex gap-2">
+                        <Button
+                          onClick={() => addToCart({
+                            slug: product.slug,
+                            name: product.name,
+                            priceEur: product.priceEur,
+                            media: product.media
+                          }, quantity)}
+                          className="flex-1"
+                        >
+                          Update Cart
+                        </Button>
+                        <Button
+                          variant="outline"
+                          onClick={() => addToCart({
+                            slug: product.slug,
+                            name: product.name,
+                            priceEur: product.priceEur,
+                            media: product.media
+                          }, -quantity)}
+                          disabled={currentQuantity <= quantity}
+                        >
+                          Remove
+                        </Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <Button
+                      onClick={() => addToCart({
+                        slug: product.slug,
+                        name: product.name,
+                        priceEur: product.priceEur,
+                        media: product.media
+                      }, quantity)}
+                      className="w-full"
+                    >
+                      <ShoppingCart className="mr-2 h-4 w-4" />
+                      Add to Cart
+                    </Button>
+                  )}
+
+                  <PayPalButton amountEur={product.priceEur * quantity} />
                   <QuoteModal defaultProduct={product as ProductRecord} />
                   {product.badges && (
                     <div className="flex gap-2 pt-2">

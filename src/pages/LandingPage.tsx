@@ -10,6 +10,7 @@ import { ScrollNavigation } from '@/components/ScrollNavigation';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { HeroSlideshow } from '@/components/HeroSlideshow';
 import { VideoSlideshow } from '@/components/VideoSlideshow';
+import { CartSidebar } from '@/components/cart/CartSidebar';
 
 export function LandingPage() {
   const sections = ['hero', 'videos', 'products', 'about', 'blog', 'contact'];
@@ -26,6 +27,21 @@ export function LandingPage() {
       document.documentElement.classList.add('dark');
     }
   }, []);
+
+  // Handle navigation clicks for smooth scrolling
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, sectionId: string) => {
+    e.preventDefault();
+    const sectionIndex = sections.indexOf(sectionId);
+    if (sectionIndex !== -1) {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        element.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    }
+  };
 
   React.useEffect(() => {
     const previousBehavior = document.documentElement.style.scrollBehavior;
@@ -50,11 +66,13 @@ export function LandingPage() {
               />
             </div>
             <div className="hidden md:flex items-center space-x-8">
-              <a href="#videos" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">Videos</a>
-              <a href="#products" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">Products</a>
-              <a href="#about" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">About</a>
-              <a href="#blog" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">Blog</a>
-              <a href="#contact" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">Contact</a>
+              <button onClick={(e) => handleNavClick(e, 'hero')} className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">Home</button>
+              <button onClick={(e) => handleNavClick(e, 'videos')} className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">Videos</button>
+              <button onClick={(e) => handleNavClick(e, 'products')} className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">Products</button>
+              <button onClick={(e) => handleNavClick(e, 'about')} className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">About</button>
+              <button onClick={(e) => handleNavClick(e, 'blog')} className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">Blog</button>
+              <button onClick={(e) => handleNavClick(e, 'contact')} className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">Contact</button>
+              <CartSidebar />
               <ThemeToggle />
               <Link to="/login">
                 <Button variant="outline" className="border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white">

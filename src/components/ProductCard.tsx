@@ -12,29 +12,44 @@ interface ProductCardProps {
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-  const firstMedia = product.media[0];
-  const poster = firstMedia.type === 'image' ? firstMedia.src : firstMedia.poster || undefined;
-  const firstVideo = product.media.find(m => m.type === 'youtube');
-
+  const [currentMediaIndex, setCurrentMediaIndex] = React.useState(0);
   const [hovered, setHovered] = React.useState(false);
-  const videoRef = React.useRef<HTMLIFrameElement | null>(null);
 
-  const videoSrc = firstVideo ? firstVideo.src.replace('watch?v=', 'embed/').replace('shorts/', 'embed/') + '&autoplay=1&mute=1&loop=1&controls=0&playsinline=1' : undefined;
+  const currentMedia = product.media[currentMediaIndex];
+  const isVideo = currentMedia?.type === 'youtube';
+  const poster = isVideo ? currentMedia.poster : currentMedia?.src;
+
+  const videoSrc = isVideo ? currentMedia.src.replace('watch?v=', 'embed/').replace('shorts/', 'embed/') + '&autoplay=1&mute=1&loop=1&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&fs=0' : undefined;
+
+  const handleMediaHover = () => {
+    if (product.media.length > 1) {
+      setHovered(true);
+      // Auto-advance through media items
+      const interval = setInterval(() => {
+        setCurrentMediaIndex((prev) => (prev + 1) % product.media.length);
+      }, 2000);
+
+      return () => clearInterval(interval);
+    }
+  };
 
   return (
     <Card className="group hover:shadow-xl transition-all duration-300 border-0 shadow-lg overflow-hidden rounded-2xl flex flex-col h-full">
-      <div className="relative h-48 bg-gray-100 flex items-center justify-center" onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
-        {firstVideo ? (
+      <div
+        className="relative h-48 bg-gray-100 flex items-center justify-center"
+        onMouseEnter={handleMediaHover}
+        onMouseLeave={() => setHovered(false)}
+      >
+        {isVideo ? (
           <div className="w-full h-full flex items-center justify-center">
             {!hovered && poster ? (
               <img src={poster} alt={product.name} className="w-full h-full object-contain" />
             ) : (
               <iframe
-                ref={videoRef}
                 className="w-full h-full"
                 src={videoSrc}
                 title={product.name}
-                allow="autoplay; encrypted-media; picture-in-picture"
+                allow="autoplay; encrypted-media"
                 allowFullScreen
               />
             )}
@@ -49,6 +64,16 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             </Badge>
           ))}
         </div>
+        {product.media.length > 1 && (
+          <div className="absolute bottom-2 right-2 flex gap-1">
+            {product.media.map((_, index) => (
+              <div
+                key={index}
+                className={`w-2 h-2 rounded-full ${index === currentMediaIndex ? 'bg-white' : 'bg-white/50'}`}
+              />
+            ))}
+          </div>
+        )}
       </div>
       <CardHeader>
         <CardTitle className="flex items-center justify-between text-lg">

@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { HashRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./components/auth/AuthContext";
+import { CartProvider } from "./components/cart/CartContext";
 
 import { LandingPage } from "./pages/LandingPage";
 import { ProductDetailPage } from "./pages/ProductDetailPage";
@@ -23,26 +24,28 @@ const App = () => {
     <QueryClientProvider client={queryClient}>
       {/* <ThemeProvider defaultTheme="system" storageKey="ayger-ui-theme"> */}
         <AuthProvider>
-          <TooltipProvider>
-            <Toaster />
-            <Sonner />
-            <HashRouter>
-            <Routes>
-              <Route path="/" element={<LandingPage />} />
-              <Route path="/login" element={<LoginForm />} />
-              <Route path="/product/:productId" element={<ProductDetailPage />} />
-              <Route path="/blog" element={<BlogPage />} />
+          <CartProvider>
+            <TooltipProvider>
+              <Toaster />
+              <Sonner />
+              <HashRouter>
+              <Routes>
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/login" element={<LoginForm />} />
+                <Route path="/product/:productId" element={<ProductDetailPage />} />
+                <Route path="/blog" element={<BlogPage />} />
 
-              <Route path="/athlete/performance" element={<PerformancePage />} />
-              <Route path="/athlete/upload" element={<UploadPage />} />
-              <Route path="/coach/dashboard" element={<CoachDashboard />} />
-              {/* <Route path="/coach/athletes" element={<MyAthletesPage />} /> */}
-              {/* <Route path="/coach/planning" element={<TrainingPlansPage />} /> */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </HashRouter>
-        </TooltipProvider>
-      </AuthProvider>
+                <Route path="/athlete/performance" element={<PerformancePage />} />
+                <Route path="/athlete/upload" element={<UploadPage />} />
+                <Route path="/coach/dashboard" element={<CoachDashboard />} />
+                {/* <Route path="/coach/athletes" element={<MyAthletesPage />} /> */}
+                {/* <Route path="/coach/planning" element={<TrainingPlansPage />} /> */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </HashRouter>
+            </TooltipProvider>
+          </CartProvider>
+        </AuthProvider>
     {/* </ThemeProvider> */}
     </QueryClientProvider>
   );
