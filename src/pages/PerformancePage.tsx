@@ -6,6 +6,7 @@ import { useAuth } from '../components/auth/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 export function PerformancePage() {
+  // Mobile-friendly performance page
   const { user, loading } = useAuth();
   const navigate = useNavigate();
 

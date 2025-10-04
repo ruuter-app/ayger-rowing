@@ -13,6 +13,7 @@ import { ThemeToggle } from '../components/theme/ThemeToggle';
 import { Users, TrendingUp, Calendar, Activity, Eye, UserPlus, BarChart3 } from 'lucide-react';
 
 export function CoachDashboard() {
+  // Mobile-friendly coach dashboard
   const { user } = useAuth();
   const coachAthletes = getAthletesForCoach(user?.id || '');
   const pendingInvitations = mockInvitations.filter(inv => inv.invitedBy === user?.id && inv.status === 'pending');
