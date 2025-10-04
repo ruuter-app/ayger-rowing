@@ -1,4 +1,4 @@
-import { useState } from "react"
+import React, { useState } from "react"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -13,8 +13,15 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { UserPlus, Mail, Send } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
+import { useAuth } from "@/components/auth/AuthContext"
+import { mockInvitations } from "@/lib/mockData"
+import { AthleteInvitation } from "@/types"
 
-export function InviteAthleteDialog() {
+interface InviteAthleteDialogProps {
+  trigger?: React.ReactNode;
+}
+
+export function InviteAthleteDialog({ trigger }: InviteAthleteDialogProps) {
   const [open, setOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [formData, setFormData] = useState({
@@ -23,13 +30,44 @@ export function InviteAthleteDialog() {
     message: ""
   })
   const { toast } = useToast()
+  const { user } = useAuth()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    if (!user || user.role !== 'coach') {
+      toast({
+        title: "Error",
+        description: "Only coaches can send invitations.",
+        variant: "destructive"
+      })
+      return
+    }
+
+    if (!formData.email.trim()) {
+      toast({
+        title: "Error",
+        description: "Please enter an email address.",
+        variant: "destructive"
+      })
+      return
+    }
+
     setIsLoading(true)
-    
+
     // Simulate API call
     setTimeout(() => {
+      const newInvitation: AthleteInvitation = {
+        id: `invite_${Date.now()}`,
+        email: formData.email.trim(),
+        invitedBy: user.id,
+        invitedAt: new Date().toISOString(),
+        status: 'pending',
+        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString() // 7 days
+      }
+
+      mockInvitations.push(newInvitation)
+
       toast({
         title: "Invitation sent!",
         description: `Invitation sent to ${formData.email}`,
@@ -43,10 +81,12 @@ export function InviteAthleteDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>
-          <UserPlus className="h-4 w-4 mr-2" />
-          Invite Athlete
-        </Button>
+        {trigger || (
+          <Button>
+            <UserPlus className="h-4 w-4 mr-2" />
+            Invite Athlete
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>

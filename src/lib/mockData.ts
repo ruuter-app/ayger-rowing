@@ -1,4 +1,4 @@
-import { User, Session, PlannedWorkout, AthleteStats } from '../types';
+import { User, Session, PlannedWorkout, AthleteStats, AthleteInvitation, Device, SessionDevice } from '../types';
 
 export const mockUsers: User[] = [
   {
@@ -27,7 +27,7 @@ export const mockUsers: User[] = [
 export const mockSessions: Session[] = [
   {
     id: 'session1',
-    athleteId: 'athlete1',
+    athleteIds: ['athlete1'],
     date: '2024-01-15',
     duration: 45,
     distance: 8000,
@@ -36,11 +36,12 @@ export const mockSessions: Session[] = [
     avgCadence: 85,
     fileName: 'morning_row_2024-01-15.csv',
     data: generateMockSessionData(45, 8000),
-    notes: 'Great steady state session'
+    notes: 'Great steady state session',
+    deviceId: 'device1'
   },
   {
     id: 'session2',
-    athleteId: 'athlete1',
+    athleteIds: ['athlete1'],
     date: '2024-01-12',
     duration: 30,
     distance: 6000,
@@ -49,11 +50,12 @@ export const mockSessions: Session[] = [
     avgCadence: 88,
     fileName: 'interval_training_2024-01-12.csv',
     data: generateMockSessionData(30, 6000),
-    notes: 'Interval training - 6x500m'
+    notes: 'Interval training - 6x500m',
+    deviceId: 'device1'
   },
   {
     id: 'session3',
-    athleteId: 'athlete2',
+    athleteIds: ['athlete2'],
     date: '2024-01-14',
     duration: 60,
     distance: 12000,
@@ -62,7 +64,22 @@ export const mockSessions: Session[] = [
     avgCadence: 82,
     fileName: 'long_row_2024-01-14.csv',
     data: generateMockSessionData(60, 12000),
-    notes: 'Long endurance piece'
+    notes: 'Long endurance piece',
+    deviceId: 'device2'
+  },
+  {
+    id: 'session4',
+    athleteIds: ['athlete1', 'athlete2'], // Group session
+    date: '2024-01-16',
+    duration: 50,
+    distance: 10000,
+    avgPace: 128, // 2:08 per 500m
+    avgStrokeRate: 21,
+    avgCadence: 84,
+    fileName: 'group_session_2024-01-16.csv',
+    data: generateMockSessionData(50, 10000),
+    notes: 'Group training session',
+    deviceId: 'device1'
   }
 ];
 
@@ -149,6 +166,125 @@ function generateMockSessionData(durationMinutes: number, totalDistance: number)
   return points;
 }
 
+// Mock invitations
+export const mockInvitations: AthleteInvitation[] = [
+  {
+    id: 'invite1',
+    email: 'new.athlete@example.com',
+    invitedBy: 'coach1',
+    invitedAt: '2024-01-15T10:00:00Z',
+    status: 'pending',
+    expiresAt: '2024-01-22T10:00:00Z'
+  },
+  {
+    id: 'invite2',
+    email: 'another.athlete@example.com',
+    invitedBy: 'coach1',
+    invitedAt: '2024-01-14T14:30:00Z',
+    status: 'accepted',
+    expiresAt: '2024-01-21T14:30:00Z',
+    athleteId: 'athlete3'
+  }
+];
+
+// Mock devices
+export const mockDevices: Device[] = [
+  {
+    id: 'device1',
+    name: 'Rowing Machine 1',
+    type: 'rowing_machine',
+    location: 'Main Gym',
+    isActive: true
+  },
+  {
+    id: 'device2',
+    name: 'Rowing Machine 2',
+    type: 'rowing_machine',
+    location: 'Main Gym',
+    isActive: true
+  },
+  {
+    id: 'device3',
+    name: 'Concept2 Model D',
+    type: 'rowing_machine',
+    location: 'Training Room',
+    isActive: true
+  }
+];
+
+// Mock session-device relationships
+export const mockSessionDevices: SessionDevice[] = [
+  {
+    sessionId: 'session1',
+    deviceId: 'device1',
+    startTime: '2024-01-15T08:00:00Z',
+    endTime: '2024-01-15T08:45:00Z',
+    athletes: ['athlete1']
+  },
+  {
+    sessionId: 'session2',
+    deviceId: 'device1',
+    startTime: '2024-01-12T07:00:00Z',
+    endTime: '2024-01-12T07:30:00Z',
+    athletes: ['athlete1']
+  },
+  {
+    sessionId: 'session3',
+    deviceId: 'device2',
+    startTime: '2024-01-14T09:00:00Z',
+    endTime: '2024-01-14T10:00:00Z',
+    athletes: ['athlete2']
+  },
+  {
+    sessionId: 'session4',
+    deviceId: 'device1',
+    startTime: '2024-01-16T16:00:00Z',
+    endTime: '2024-01-16T16:50:00Z',
+    athletes: ['athlete1', 'athlete2'] // Group session
+  }
+];
+
+// Helper function to get sessions for an athlete
+export const getSessionsForAthlete = (athleteId: string): Session[] => {
+  return mockSessions.filter(session => session.athleteIds.includes(athleteId));
+};
+
+// Helper function to get athletes for a coach
+export const getAthletesForCoach = (coachId: string): User[] => {
+  return mockUsers.filter(user => user.role === 'athlete' && (user as any).coachId === coachId);
+};
+
+// Helper function to get comparison data for athletes
+export const getAthleteComparisonData = (athleteIds: string[]): any[] => {
+  return athleteIds.map(athleteId => {
+    const sessions = getSessionsForAthlete(athleteId);
+    const athlete = mockUsers.find(u => u.id === athleteId);
+
+    return {
+      athleteId,
+      athleteName: athlete?.name || 'Unknown',
+      metrics: {
+        avgPace: sessions.length > 0 ? sessions.reduce((sum, s) => sum + s.avgPace, 0) / sessions.length : 0,
+        avgStrokeRate: sessions.length > 0 ? sessions.reduce((sum, s) => sum + s.avgStrokeRate, 0) / sessions.length : 0,
+        totalDistance: sessions.reduce((sum, s) => sum + s.distance, 0),
+        totalSessions: sessions.length,
+        planCompliance: 85 // Mock compliance data
+      },
+      trend: generateTrendData(sessions)
+    };
+  });
+};
+
+// Helper function to generate trend data
+function generateTrendData(sessions: Session[]) {
+  const weeks = ['2024-W01', '2024-W02', '2024-W03', '2024-W04'];
+  return weeks.map(week => ({
+    week,
+    avgStrokeRate: 20 + Math.random() * 5,
+    totalDistance: Math.floor(Math.random() * 5000) + 2000
+  }));
+}
+
 // Auth state management
 let currentUser: User | null = null;
 
@@ -164,7 +300,7 @@ export const mockAuth = {
         } else {
           reject(new Error('Invalid credentials'));
         }
-      }, 1000);
+      }, 500);
     });
   },
   logout: () => {

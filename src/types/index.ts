@@ -18,7 +18,7 @@ export interface Coach extends User {
 
 export interface Session {
   id: string;
-  athleteId: string;
+  athleteIds: string[]; // Multiple athletes can be matched to a single session
   date: string;
   duration: number; // in minutes
   distance: number; // in meters
@@ -28,6 +28,7 @@ export interface Session {
   fileName: string;
   data: SessionDataPoint[];
   notes?: string;
+  deviceId?: string; // Device that recorded the session
 }
 
 export interface SessionDataPoint {
@@ -90,4 +91,50 @@ export interface AggregatedTrends {
   avgStrokeRate: number;
   totalDistance: number;
   sessionCount: number;
+}
+
+// Coach invitation system
+export interface AthleteInvitation {
+  id: string;
+  email: string;
+  invitedBy: string; // coach ID
+  invitedAt: string;
+  status: 'pending' | 'accepted' | 'declined' | 'expired';
+  expiresAt: string;
+  athleteId?: string; // Set when invitation is accepted
+}
+
+// Athlete comparison data
+export interface AthleteComparison {
+  athleteId: string;
+  athleteName: string;
+  metrics: {
+    avgPace: number;
+    avgStrokeRate: number;
+    totalDistance: number;
+    totalSessions: number;
+    planCompliance: number;
+  };
+  trend: {
+    week: string;
+    avgStrokeRate: number;
+    totalDistance: number;
+  }[];
+}
+
+// Device and session matching
+export interface Device {
+  id: string;
+  name: string;
+  type: 'rowing_machine' | 'bike' | 'other';
+  location?: string;
+  isActive: boolean;
+}
+
+export interface SessionDevice {
+  sessionId: string;
+  deviceId: string;
+  startTime: string;
+  endTime?: string;
+  athletes: string[]; // Multiple athletes can use the same device
 }

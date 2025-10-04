@@ -5,14 +5,34 @@ import { Button } from '../ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 import { TrendingUp, Users, Activity, Target } from 'lucide-react';
-import { getAthleteComparisonData, mockUsers } from '../../lib/mockData';
+import { mockUsers } from '../../lib/mockData';
 
 interface AthleteComparisonProps {
   athleteIds: string[];
 }
 
 export function AthleteComparison({ athleteIds }: AthleteComparisonProps) {
-  const comparisonData = getAthleteComparisonData(athleteIds);
+  // Mock comparison data
+  const comparisonData = athleteIds.map(athleteId => {
+    const athlete = mockUsers.find(u => u.id === athleteId);
+    return {
+      athleteId,
+      athleteName: athlete?.name || 'Unknown',
+      metrics: {
+        avgPace: 120 + Math.random() * 20, // Mock pace between 2:00-2:20
+        avgStrokeRate: 20 + Math.random() * 10, // Mock stroke rate 20-30
+        totalDistance: 5000 + Math.random() * 10000, // Mock distance
+        totalSessions: 10 + Math.floor(Math.random() * 20), // Mock sessions
+        planCompliance: 80 + Math.random() * 20 // Mock compliance 80-100%
+      },
+      trend: [
+        { week: '2024-W01', avgStrokeRate: 22, totalDistance: 3000 },
+        { week: '2024-W02', avgStrokeRate: 24, totalDistance: 4000 },
+        { week: '2024-W03', avgStrokeRate: 23, totalDistance: 3500 },
+        { week: '2024-W04', avgStrokeRate: 25, totalDistance: 4500 }
+      ]
+    };
+  });
 
   const formatPace = (pace: number) => {
     const minutes = Math.floor(pace / 60);
