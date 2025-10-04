@@ -19,6 +19,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Badge } from '../ui/badge';
 import { MapPin, Clock, Target, Heart } from 'lucide-react';
 import { SessionMap } from './SessionMap';
+import { trainingDataService } from '../../lib/trainingDataService';
 
 // Register all required controllers and elements
 ChartJS.register(
@@ -75,27 +76,29 @@ export function SessionDetailsChartJS() {
   const loadSessions = async () => {
     setLoading(true);
     try {
-      // Handle base path for GitHub Pages
-      const basePath = import.meta.env.BASE_URL || '/';
-      let csvPath = `${basePath}takatomo-training-data/training_logs.csv`;
-      
-      // Clean up the path to avoid double slashes
-      csvPath = csvPath.replace(/\/+/g, '/');
-      
-      const response = await fetch(csvPath);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-      const csvText = await response.text();
-      console.log('CSV loaded successfully, length:', csvText.length);
-      
-      const parsedSessions = parseSessionsFromCSV(csvText);
-      console.log('Parsed sessions:', parsedSessions.length);
-      
+      // Load training data using the service
+      const processedSessions = await trainingDataService.loadTrainingData();
+      console.log('Loaded sessions:', processedSessions.length);
+
+      // Convert processed sessions to the format expected by the chart
+      const sessions = processedSessions.map(session => ({
+        filename: session.fileName,
+        startTime: new Date(session.date).getTime() / 1000,
+        data: session.data.map(point => ({
+          timeMinutes: Math.round(point.time / 60), // Convert seconds to minutes
+          distance: point.distance,
+          strokeRate: point.strokeRate,
+          heartRate: point.heartRate,
+          pace: point.pace
+        })),
+        rawData: session.rawData
+      }));
+
+      console.log('Converted sessions:', sessions.length);
+
       // Log GPS data for all sessions
       console.log('All sessions GPS data:');
-      parsedSessions.forEach((session, index) => {
+      sessions.forEach((session, index) => {
         const hasGPS = session.rawData?.some(point => point.longitude && point.latitude);
         console.log(`Session ${index + 1}:`, {
           filename: session.filename,
@@ -107,10 +110,10 @@ export function SessionDetailsChartJS() {
           } : null
         });
       });
-      
-      setSessions(parsedSessions);
-      if (parsedSessions.length > 0) {
-        setSelectedSession(parsedSessions[0]); // Select the first session by default
+
+      setSessions(sessions);
+      if (sessions.length > 0) {
+        setSelectedSession(sessions[0]); // Select the first session by default
       }
     } catch (error) {
       console.error('Error loading sessions:', error);
@@ -119,88 +122,6 @@ export function SessionDetailsChartJS() {
     }
   };
 
-  const parseSessionsFromCSV = (csvText: string): Session[] => {
-    const lines = csvText.trim().split('\n');
-    if (lines.length <= 1) return [];
-
-    const sessionsMap: Record<string, any> = {};
-
-    // Parse CSV data and group by session
-    for (let i = 1; i < lines.length; i++) {
-      const line = lines[i].trim();
-      if (!line) continue;
-
-      const row = line.split(',');
-      if (row.length < 5) continue;
-
-      const filename = row[0];
-      const startTime = parseInt(row[1]);
-      const delta = parseInt(row[2]) || 0;
-      const distance = parseFloat(row[3]) || 0;
-      const strokeRate = parseFloat(row[4]) || 0;
-      const heartRate = parseFloat(row[5]) || 0;
-      const longitude = row[6] || '';
-      const latitude = row[7] || '';
-
-      if (isNaN(startTime) || startTime <= 0) continue;
-
-      const sessionKey = `${filename}_${startTime}`;
-      if (!sessionsMap[sessionKey]) {
-        sessionsMap[sessionKey] = {
-          filename,
-          startTime,
-          dataPoints: [],
-          rawData: []
-        };
-      }
-
-      sessionsMap[sessionKey].dataPoints.push({
-        delta,
-        distance,
-        strokeRate,
-        heartRate
-      });
-
-      // Add raw data for GPS coordinates
-      sessionsMap[sessionKey].rawData.push({
-        longitude,
-        latitude,
-        distance,
-        heartrate: heartRate,
-        strokerate: strokeRate
-      });
-    }
-
-    // Convert to sessions with processed data
-    return Object.values(sessionsMap).map((session: any) => {
-      // Sort data points by delta (time)
-      session.dataPoints.sort((a: any, b: any) => a.delta - b.delta);
-
-      // Convert to chart data format
-      const data: SessionData[] = session.dataPoints.map((point: any, index: number) => {
-        // Calculate pace per 500m (in seconds)
-        // Pace = (time in seconds / distance in meters) * 500
-        const timeSeconds = point.delta / 1000; // Convert milliseconds to seconds
-        const pace = point.distance > 0 ? (timeSeconds / point.distance) * 500 : 0;
-        
-        return {
-          timeMinutes: Math.round(point.delta / 60000), // Convert milliseconds to minutes
-          distance: point.distance,
-          strokeRate: point.strokeRate,
-          heartRate: point.heartRate,
-          pace: Math.round(pace * 10) / 10 // Round to 1 decimal place
-        };
-      });
-
-      return {
-        filename: session.filename,
-        startTime: session.startTime,
-        data,
-        rawData: session.rawData
-      };
-    }).filter(session => session.data.length > 0)
-      .sort((a, b) => b.startTime - a.startTime); // Sort by newest first
-  };
 
   const handleMetricToggle = (metricKey: string) => {
     if (selectedMetrics.includes(metricKey)) {

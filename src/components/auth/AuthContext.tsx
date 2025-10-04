@@ -5,7 +5,7 @@ import { mockAuth } from '../../lib/mockData';
 interface AuthContextType {
   user: User | null;
   loading: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<User>;
   logout: () => void;
 }
 
@@ -26,6 +26,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const user = await mockAuth.login(email, password);
       setUser(user);
+      return user;
     } catch (error) {
       throw error;
     }

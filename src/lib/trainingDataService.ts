@@ -40,12 +40,12 @@ class TrainingDataService {
   async loadTrainingData(): Promise<ProcessedSession[]> {
     try {
       // Load session summary data
-      const sessionResponse = await fetch('takatomo-training-data/training_data.csv');
+      const sessionResponse = await fetch('/takatomo-training-data/training_data.csv');
       const sessionText = await sessionResponse.text();
       this.sessions = this.parseCSV(sessionText, this.parseSessionRow);
 
-      // Load detailed logs (with GPS coordinates for 20250530-073626.pb session)
-      const logsResponse = await fetch('takatomo-training-data/training_logs.csv');
+      // Load detailed logs
+      const logsResponse = await fetch('/takatomo-training-data/training_logs.csv');
       const logsText = await logsResponse.text();
       this.logs = this.parseCSV(logsText, this.parseLogRow);
 
@@ -199,11 +199,11 @@ class TrainingDataService {
     return {
       totalSessions: this.processedSessions.length,
       totalDistance,
-      totalDuration,
-      avgPace: totalPace / this.processedSessions.length,
-      avgHeartRate: totalHeartRate / this.processedSessions.length,
+      totalDuration: Math.round(totalDuration * 100) / 100, // Round to 2 decimal places
+      avgPace: Math.round(totalPace / this.processedSessions.length * 100) / 100,
+      avgHeartRate: Math.round(totalHeartRate / this.processedSessions.length * 100) / 100,
       maxDistance,
-      longestSession
+      longestSession: Math.round(longestSession * 100) / 100
     };
   }
 

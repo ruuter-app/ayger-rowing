@@ -7,23 +7,33 @@ import { Alert, AlertDescription } from '../ui/alert';
 import { Loader2 } from 'lucide-react';
 import { useAuth } from './AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { User } from '../../types';
 
 export function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { login } = useAuth();
+  const { login, user } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (e?: React.FormEvent) => {
+    // Prevent default form submission if event is provided
+    if (e) {
+      e.preventDefault();
+    }
+
     setError('');
     setLoading(true);
 
     try {
-      await login(email, password);
-      navigate('/athlete/performance');
+      const loggedInUser = await login(email, password) as User;
+      // Redirect based on user role
+      if (loggedInUser.role === 'coach') {
+        navigate('/coach/dashboard');
+      } else {
+        navigate('/athlete/performance');
+      }
     } catch (err) {
       setError('Invalid email or password');
     } finally {
@@ -31,13 +41,32 @@ export function LoginForm() {
     }
   };
 
-  const handleDemoLogin = (role: 'athlete' | 'coach') => {
-    if (role === 'athlete') {
-      setEmail('sarah.jones@email.com');
-    } else {
-      setEmail('coach.thompson@email.com');
+  const handleDemoLogin = async (role: 'athlete' | 'coach') => {
+    const demoEmail = role === 'athlete' ? 'sarah.jones@email.com' : 'coach.thompson@email.com';
+
+    // Set loading state and clear any previous errors
+    setLoading(true);
+    setError('');
+
+    try {
+      // Login directly with demo credentials
+      const loggedInUser = await login(demoEmail, 'Ayger2024!') as User;
+
+      // Update form state to show demo credentials
+      setEmail(demoEmail);
+      setPassword('Ayger2024!');
+
+      // Redirect based on user role
+      if (loggedInUser.role === 'coach') {
+        navigate('/coach/dashboard');
+      } else {
+        navigate('/athlete/performance');
+      }
+    } catch (err) {
+      setError('Demo login failed');
+    } finally {
+      setLoading(false);
     }
-    setPassword('Ayger2024!');
   };
 
   return (
@@ -61,7 +90,7 @@ export function LoginForm() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4" id="login-form">
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
