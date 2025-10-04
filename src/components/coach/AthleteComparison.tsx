@@ -1,12 +1,11 @@
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Badge } from '../ui/badge';
+import { Button } from '../ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 import { TrendingUp, Users, Activity, Target } from 'lucide-react';
-import { getAthleteComparisonData, mockUsers } from '@/lib/mockData';
-import { formatPriceEur } from '@/lib/products';
+import { getAthleteComparisonData, mockUsers } from '../../lib/mockData';
 
 interface AthleteComparisonProps {
   athleteIds: string[];
