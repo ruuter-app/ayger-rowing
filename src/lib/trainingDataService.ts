@@ -39,13 +39,17 @@ class TrainingDataService {
 
   async loadTrainingData(): Promise<ProcessedSession[]> {
     try {
+      // Use relative path for proper production deployment
+      const basePath = import.meta.env.BASE_URL || '/';
+      const dataPath = `${basePath}takatomo-training-data/`;
+      
       // Load session summary data
-      const sessionResponse = await fetch('/takatomo-training-data/training_data.csv');
+      const sessionResponse = await fetch(`${dataPath}training_data.csv`);
       const sessionText = await sessionResponse.text();
       this.sessions = this.parseCSV(sessionText, this.parseSessionRow);
 
       // Load detailed logs
-      const logsResponse = await fetch('/takatomo-training-data/training_logs.csv');
+      const logsResponse = await fetch(`${dataPath}training_logs.csv`);
       const logsText = await logsResponse.text();
       this.logs = this.parseCSV(logsText, this.parseLogRow);
 
