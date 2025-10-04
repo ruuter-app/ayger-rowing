@@ -422,9 +422,9 @@ export function SessionDetailsChartJS() {
           )}
           
           {/* Controls */}
-          <div className="flex flex-wrap gap-4 items-center">
-            <div className="flex gap-2 items-center">
-              <span className="text-sm text-muted-foreground">Session:</span>
+          <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 items-start sm:items-center">
+            <div className="flex gap-2 items-center w-full sm:w-auto">
+              <span className="text-sm text-muted-foreground whitespace-nowrap">Session:</span>
               <Select 
                 value={selectedSession?.filename || ''} 
                 onValueChange={(filename) => {
@@ -438,7 +438,7 @@ export function SessionDetailsChartJS() {
                   setSelectedSession(session || null);
                 }}
               >
-                <SelectTrigger className="w-48">
+                <SelectTrigger className="w-full sm:w-48">
                   <SelectValue placeholder="Select a session" />
                 </SelectTrigger>
                 <SelectContent>
@@ -452,7 +452,7 @@ export function SessionDetailsChartJS() {
             </div>
             
             <div className="flex gap-2 items-center">
-              <span className="text-sm text-muted-foreground">X-Axis:</span>
+              <span className="text-sm text-muted-foreground whitespace-nowrap">X-Axis:</span>
               <Button
                 variant={xAxisType === 'time' ? "default" : "outline"}
                 size="sm"
@@ -469,19 +469,22 @@ export function SessionDetailsChartJS() {
               </Button>
             </div>
             
-            <div className="flex gap-2 items-center">
-              <span className="text-sm text-muted-foreground">Metrics (select up to 3):</span>
-              {METRICS.map(metric => (
-                <Button
-                  key={metric.key}
-                  variant={selectedMetrics.includes(metric.key) ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => handleMetricToggle(metric.key)}
-                  disabled={!selectedMetrics.includes(metric.key) && selectedMetrics.length >= 3}
-                >
-                  {metric.label}
-                </Button>
-              ))}
+            <div className="flex flex-col sm:flex-row gap-2 items-start sm:items-center w-full">
+              <span className="text-sm text-muted-foreground whitespace-nowrap">Metrics (up to 3):</span>
+              <div className="flex flex-wrap gap-2">
+                {METRICS.map(metric => (
+                  <Button
+                    key={metric.key}
+                    variant={selectedMetrics.includes(metric.key) ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => handleMetricToggle(metric.key)}
+                    disabled={!selectedMetrics.includes(metric.key) && selectedMetrics.length >= 3}
+                    className="text-xs sm:text-sm"
+                  >
+                    {metric.label}
+                  </Button>
+                ))}
+              </div>
             </div>
           </div>
         </CardHeader>
@@ -492,7 +495,7 @@ export function SessionDetailsChartJS() {
               No data available for this session
             </div>
           ) : (
-            <div className="h-96">
+            <div className="h-64 sm:h-80 md:h-96">
               <Chart type="line" data={chartConfig} options={options} />
             </div>
           )}

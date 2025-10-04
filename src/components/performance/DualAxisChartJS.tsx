@@ -438,7 +438,7 @@ export function DualAxisChartJS() {
             No data available for the selected period
           </div>
         ) : (
-          <div className="h-96">
+          <div className="h-64 sm:h-80 md:h-96">
             <Chart type="line" data={chartConfig} options={options} />
           </div>
         )}

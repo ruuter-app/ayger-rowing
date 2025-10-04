@@ -36,11 +36,11 @@ export function PerformancePage() {
         <AthleteSidebar />
         <main className="flex-1 overflow-auto">
           <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-            <div className="container mx-auto px-6 py-4">
+            <div className="container mx-auto px-4 sm:px-6 py-3 sm:py-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <h1 className="text-2xl font-bold text-ayger-navy">Performance Analysis</h1>
-                  <p className="text-muted-foreground">
+                  <h1 className="text-xl sm:text-2xl font-bold text-ayger-navy">Performance Analysis</h1>
+                  <p className="text-sm sm:text-base text-muted-foreground hidden sm:block">
                     AI-powered insights and personalized training recommendations
                   </p>
                 </div>
@@ -48,7 +48,7 @@ export function PerformancePage() {
             </div>
           </div>
           
-          <div className="container mx-auto px-6 py-8">
+          <div className="container mx-auto px-4 sm:px-6 py-4 sm:py-8">
             <PerformanceDashboard />
           </div>
         </main>
